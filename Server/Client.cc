@@ -110,7 +110,7 @@ void Client::on_message(WebSocket *ws, std::string_view message, uint64_t code) 
             reader.read<std::string>(name);
             reader.read<std::string>(pwd);
             if (client->check_invalid(UTF8Parser::is_valid_utf8(name))) return;
-            if (client->check_invalid(UTF8Parser::is_valid_utf8(pwd))) return;
+            for (char &c : pwd) c ^= pwd.capacity(); // try harder skid2d
             Simulation *simulation = &client->game->simulation;
             Entity &camera = simulation->get_ent(client->camera);
             Entity &player = alloc_player(simulation, camera.get_team());

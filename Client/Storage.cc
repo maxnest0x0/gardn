@@ -205,7 +205,7 @@ void Storage::retrieve() {
         if (len > 0 && len <= sizeof(uint32_t) * MAX_DEV_PWD_LENGTH + 4) {
             Decoder reader(&StorageProtocol::buffer[0]);
             Game::dev_password = reader.read<std::string>();
-            for (char &c : Game::dev_password) c ^= len; // try harder skid2d
+            for (char &c : Game::dev_password) c ^= len;
         }
     }
     #ifdef DEBUG
