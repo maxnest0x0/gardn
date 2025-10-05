@@ -24,6 +24,7 @@ static Element *make_paragraph(std::string const contents) {
 }
 
 static Element *make_entries(std::initializer_list<std::string const> contents) {
+    Game::changelog_entries += contents.size();
     Element *elt = new Ui::VContainer({}, 5, 3, { .h_justify = Style::Left, .v_justify = Style::Top });
     for (std::string const str : contents)
         elt->add_child(make_paragraph(str));

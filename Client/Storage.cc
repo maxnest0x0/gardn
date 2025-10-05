@@ -149,7 +149,8 @@ public:
     X(2, Game::seen_petals) \
     X(3, Input::keyboard_movement) \
     X(4, Input::movement_helper) \
-    X(5, Game::recovery_id)
+    X(5, Game::recovery_id) \
+    X(6, Game::seen_changelog)
 
 #define X(ct, name) static auto checker_##ct = MutationObserver(name);
 STORED
@@ -201,6 +202,13 @@ void Storage::retrieve() {
         }
     }
     {
+        uint32_t len = StorageProtocol::retrieve("changelog", 5);
+        if (len > 0) {
+            Decoder reader(&StorageProtocol::buffer[0]);
+            Game::seen_changelog = reader.read<uint32_t>();
+        }
+    }
+    {
         uint32_t len = StorageProtocol::retrieve("dev", sizeof(uint32_t) * MAX_DEV_PWD_LENGTH + 4);
         if (len > 0 && len <= sizeof(uint32_t) * MAX_DEV_PWD_LENGTH + 4) {
             Decoder reader(&StorageProtocol::buffer[0]);
@@ -248,5 +256,10 @@ void Storage::set() {
         Encoder writer(&StorageProtocol::buffer[0]);
         writer.write<uint64_t>(Game::recovery_id);
         StorageProtocol::store("recovery_id", writer.at - writer.base);
+    }
+    {
+        Encoder writer(&StorageProtocol::buffer[0]);
+        writer.write<uint32_t>(Game::seen_changelog);
+        StorageProtocol::store("changelog", writer.at - writer.base);
     }
 }

@@ -1,6 +1,7 @@
 #include <Client/Ui/Button.hh>
 
 #include <Client/Ui/Extern.hh>
+#include <Client/Game.hh>
 #include <Client/Input.hh>
 
 using namespace Ui;
@@ -39,6 +40,21 @@ void Button::refactor() {
 
 void Button::on_event(uint8_t event) {
     on_click(this, event);
+}
+
+ShakeButton::ShakeButton(float w, float h, Element *l, void x(Element *, uint8_t), bool y (void), bool z (void), Style s) :
+    Button(w, h, l, x, y, s), should_shake(z) {}
+
+void ShakeButton::on_render(Renderer &ctx) {
+    if (is_shaking || (should_shake != nullptr && should_shake())) {
+        float time = std::fmod(Game::timestamp, 5000) / 500 - 9;
+        if (time > 0) {
+            ctx.rotate(std::sin(time * 8 * M_PI) / 10 * std::sin(time * M_PI));
+            is_shaking = true;
+        } else
+            is_shaking = false;
+    }
+    Button::on_render(ctx);
 }
 
 ToggleButton::ToggleButton(float w, uint8_t *t) : 

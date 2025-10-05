@@ -14,6 +14,15 @@ namespace Ui {
         virtual void on_event(uint8_t) override;
     };
 
+    class ShakeButton : public Button {
+        bool (*should_shake)();
+        bool is_shaking;
+    public:
+        ShakeButton(float, float, Element *, void (Element *, uint8_t) = [](Element *, uint8_t){}, bool (void) = nullptr, bool (void) = nullptr, Style = { .fill = 0xffffffff, .stroke_hsv = 0.8 });
+
+        virtual void on_render(Renderer &) override;
+    };
+
     class ToggleButton : public Element {
         uint8_t *toggler;
         float lerp_toggle;

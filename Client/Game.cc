@@ -55,6 +55,9 @@ namespace Game {
     std::string chat_text;
 
     uint64_t recovery_id = 0;
+
+    uint32_t changelog_entries = 0;
+    uint32_t seen_changelog = 0;
 }
 
 using namespace Game;

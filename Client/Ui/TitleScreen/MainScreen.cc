@@ -172,10 +172,11 @@ Element *Ui::make_panel_buttons() {
             [](){ return Ui::panel_open == Panel::kMobs; },
             { .fill = 0xff5a9fdb, .line_width = 5, .round_radius = 3 }
         ),
-        new Ui::Button(120, 35, 
+        new Ui::ShakeButton(120, 35, 
             new Ui::StaticText(16, "Changelog"), 
             [](Element *elt, uint8_t e){ if (e == Ui::kClick) {
                 if (Ui::panel_open != Panel::kChangelog) {
+                    Game::seen_changelog = Game::changelog_entries;
                     Ui::panel_open = Panel::kChangelog;
                     Element *pg = Ui::Panel::changelog;
                     pg->x = elt->screen_x / Ui::scale - pg->width / 2;
@@ -186,6 +187,14 @@ Element *Ui::make_panel_buttons() {
                 else Ui::panel_open = Panel::kNone;
             } },
             [](){ return Ui::panel_open == Panel::kChangelog; },
+            [](){
+                if (Game::changelog_entries > Game::seen_changelog && Game::seen_changelog > 0)
+                    return true;
+                else {
+                    Game::seen_changelog = Game::changelog_entries;
+                    return false;
+                }
+            },
             { .fill = 0xff5a9fdb, .line_width = 5, .round_radius = 3 }
         ),
    }, 10, 10, { .should_render = [](){ return Game::should_render_title_ui(); }, .h_justify = Style::Left, .v_justify = Style::Bottom });

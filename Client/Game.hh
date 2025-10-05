@@ -47,6 +47,9 @@ namespace Game {
 
     extern uint64_t recovery_id;
 
+    extern uint32_t changelog_entries;
+    extern uint32_t seen_changelog;
+
     void init();
     void reset();
     uint8_t alive();
