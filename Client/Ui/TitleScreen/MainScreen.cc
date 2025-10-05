@@ -197,6 +197,15 @@ Element *Ui::make_panel_buttons() {
             },
             { .fill = 0xff5a9fdb, .line_width = 5, .round_radius = 3 }
         ),
+        new Ui::ShakeButton(120, 35, 
+            new Ui::StaticText(16, "Update"), 
+            [](Element *elt, uint8_t e){ if (e == Ui::kClick) {
+                DOM::update_client();
+            } },
+            nullptr,
+            [](){ return true; },
+            { .fill = 0xff5a9fdb, .line_width = 5, .round_radius = 3, .should_render = [](){ return Game::is_outdated; } }
+        ),
    }, 10, 10, { .should_render = [](){ return Game::should_render_title_ui(); }, .h_justify = Style::Left, .v_justify = Style::Bottom });
    return elt;
 }

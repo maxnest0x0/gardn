@@ -27,6 +27,7 @@ static void _update_client(Simulation *sim, Client *client) {
     #endif
     Writer writer(Server::OUTGOING_PACKET);
     writer.write<uint8_t>(Clientbound::kClientUpdate);
+    writer.write<uint8_t>(Server::is_draining);
     writer.write<EntityID>(client->camera);
     sim->spatial_hash.query(camera.get_camera_x(), camera.get_camera_y(), 
     960 / camera.get_fov() + 50, 540 / camera.get_fov() + 50, [&](Simulation *, Entity &ent){

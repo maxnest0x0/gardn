@@ -46,6 +46,7 @@ namespace Game {
     extern std::string chat_text;
 
     extern uint64_t recovery_id;
+    extern uint8_t is_outdated;
 
     extern uint32_t changelog_entries;
     extern uint32_t seen_changelog;

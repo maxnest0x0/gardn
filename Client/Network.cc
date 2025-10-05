@@ -14,6 +14,7 @@ void Game::on_message(uint8_t *ptr, uint32_t len) {
     switch(reader.read<uint8_t>()) {
         case Clientbound::kClientUpdate: {
             simulation_ready = 1;
+            is_outdated = reader.read<uint8_t>();
             camera_id = reader.read<EntityID>();
             EntityID curr_id = reader.read<EntityID>();
             while(!(curr_id == NULL_ENTITY)) {
