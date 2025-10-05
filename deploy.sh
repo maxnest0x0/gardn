@@ -49,7 +49,7 @@ sleep 3
 kill -0 $!
 
 cp ../../Client/public/* ../../Client/build/gardn-client.* .
-sed -i "s/const versionHash = '';/const versionHash = '$VERSION_HASH';/" index.html
+sed -i "s/const versionHash = '0';/const versionHash = '$VERSION_HASH';/" index.html
 
 mkdir -p nginx
 echo "'$VERSION_HASH' '$SERVER_PORT';" > "$NGINX_FILE"
