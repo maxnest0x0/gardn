@@ -154,8 +154,9 @@ static void tick_hornet_aggro(Simulation *sim, Entity &ent) {
             ent.acceleration.set(0,0);
         }
         ent.set_angle(v.angle());
-        if (ent.ai_tick >= 1.5 * TPS && dist < 800) {
-            ent.ai_tick = 0;
+        ++ent.ai_shooting_tick;
+        if (ent.ai_shooting_tick >= 1.5 * TPS && dist < 1000) {
+            ent.ai_shooting_tick = 0;
             //spawn missile;
             Entity &missile = alloc_petal(sim, PetalID::kMissile, ent);
             missile.damage = 10;
@@ -176,6 +177,7 @@ static void tick_hornet_aggro(Simulation *sim, Entity &ent) {
             ent.ai_tick = 0;
             ent.target = NULL_ENTITY;
         }
+        if (ent.ai_shooting_tick > 0) --ent.ai_shooting_tick;
         ent.target = find_nearest_enemy(sim, ent, ent.detection_radius);
         tick_bee_passive(sim, ent);;
     }
@@ -369,16 +371,18 @@ void tick_ai_behavior(Simulation *sim, Entity &ent) {
             ent.set_parent(NULL_ENTITY);
         } else {
             Entity const &parent = sim->get_ent(ent.get_parent());
-            Vector delta(parent.get_x() - ent.get_x(), parent.get_y() - ent.get_y());
-            if (delta.magnitude() > SUMMON_RETREAT_RADIUS) {
-                ent.target = NULL_ENTITY;
-                ent.ai_state = AIState::kReturning;
-            }
             if (sim->ent_alive(ent.target)) {
                 Entity const &target = sim->get_ent(ent.target);
-                delta = Vector(parent.get_x() - target.get_x(), parent.get_y() - target.get_y());
+                Vector delta(parent.get_x() - target.get_x(), parent.get_y() - target.get_y());
                 if (delta.magnitude() > SUMMON_RETREAT_RADIUS)
                     ent.target = NULL_ENTITY;
+            }
+            if (!sim->ent_alive(ent.target)) {
+                Vector delta(parent.get_x() - ent.get_x(), parent.get_y() - ent.get_y());
+                if (delta.magnitude() > SUMMON_RETREAT_RADIUS) {
+                    ent.target = NULL_ENTITY;
+                    ent.ai_state = AIState::kReturning;
+                }
             }
         }
     }

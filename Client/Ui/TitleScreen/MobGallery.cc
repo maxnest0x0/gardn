@@ -32,7 +32,7 @@ void GalleryMob::on_render(Renderer &ctx) {
     draw_static_mob(id, ctx, { .radius = radius, .flower_attrs = { .color = ColorID::kGray } });
     if (data.attributes.segments > 1) {
         ctx.translate(-2 * radius, 0);
-        draw_static_mob(id, ctx, { .radius = radius, .flags = 1<<1, .flower_attrs = { .color = ColorID::kGray } });
+        draw_static_mob(id, ctx, { .radius = radius, .flags = 1<<MobRenderFlags::kBodySegment, .flower_attrs = { .color = ColorID::kGray } });
     }
 }
 

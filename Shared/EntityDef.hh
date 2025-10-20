@@ -71,7 +71,8 @@ MULTIPLE(Flower, loadout_ids, PetalID::T, 2 * MAX_SLOT_COUNT) \
 MULTIPLE(Flower, loadout_reloads, uint8_t, MAX_SLOT_COUNT)
 
 #define FIELDS_Petal \
-SINGLE(Petal, petal_id, PetalID::T)
+SINGLE(Petal, petal_id, PetalID::T) \
+SINGLE(Petal, petal_flags, uint8_t)
 
 #define FIELDS_Health \
 SINGLE(Health, health_ratio, Float) \
@@ -133,9 +134,11 @@ SINGLE(Chat, text, std::string)
     \
     SINGLE(base_entity, EntityID, =NULL_ENTITY) \
     SINGLE(target, EntityID, =NULL_ENTITY) \
+    SINGLE(last_target_angle, float, =0) \
     SINGLE(seg_head, EntityID, =NULL_ENTITY) \
     SINGLE(detection_radius, float, =0) \
     SINGLE(ai_tick, game_tick_t, =0) \
+    SINGLE(ai_shooting_tick, game_tick_t, =0) \
     SINGLE(ai_state, uint8_t, =0) \
     \
     SINGLE(zone, uint8_t, =0) \
@@ -156,6 +159,7 @@ SINGLE(Chat, text, std::string)
     SINGLE(healthbar_lag, float, =0) \
     SINGLE(healthbar_opacity, float, =0) \
     SINGLE(deletion_animation, float, =0) \
+    SINGLE(special_animation, float, =0) \
     SINGLE(eye_x, float, =2) \
     SINGLE(eye_y, float, =0) \
     SINGLE(mouth, float, =15) \

@@ -2,9 +2,11 @@
 
 #include <Client/StaticData.hh>
 
+#include <Helpers/Bits.hh>
+
 #include <cmath>
 
-void draw_static_petal_single(PetalID::T id, Renderer &ctx) {
+void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttributes attrs) {
     float r = PETAL_DATA[id].radius;
     switch(id) {
         case PetalID::kNone:
@@ -93,6 +95,8 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx) {
             ctx.stroke();
             break;
         case PetalID::kBeetleEgg:
+        case PetalID::kHornetEgg:
+        case PetalID::kMassiveBeetleEgg:
             ctx.begin_path();
             ctx.ellipse(0,0,r * 0.85, r * 1.15);
             ctx.set_fill(0xfffff0b8);
@@ -102,6 +106,7 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx) {
             ctx.stroke();
             break;
         case PetalID::kMissile:
+        case PetalID::kGuidedMissile:
             ctx.scale(r / 10);
             ctx.set_fill(0xff222222);
             ctx.set_stroke(0xff222222);
@@ -158,7 +163,7 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx) {
             ctx.fill();
             ctx.stroke();
             break;
-        case PetalID::kThirdEye:
+        case PetalID::kThirdEye: {
             ctx.scale(0.5);
             ctx.set_fill(0xff111111);
             ctx.begin_path();
@@ -168,7 +173,8 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx) {
             ctx.fill();
             ctx.set_fill(0xffeeeeee);
             ctx.begin_path();
-            ctx.arc(0, 0, 5);
+            uint8_t equipped = BitMath::at(attrs.flags, PetalRenderFlags::kEquipped);
+            ctx.arc(equipped ? attrs.eye_x : 0, equipped ? attrs.eye_y : 0, 5);
             ctx.fill();
             ctx.set_stroke(0xff111111);
             ctx.set_line_width(1.5);
@@ -180,6 +186,7 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx) {
             ctx.qcurve_to(-8,0,0,-10);
             ctx.stroke();
             break;
+        }
         case PetalID::kWeb:
         case PetalID::kTriweb:
             ctx.set_fill(0xffffffff);
@@ -497,7 +504,7 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx) {
         case PetalID::kCutter:
             ctx.set_fill(0xff111111);
             ctx.begin_path();
-            ctx.arc(0,0,25);
+            if (!BitMath::at(attrs.flags, PetalRenderFlags::kEquipped)) ctx.arc(0,0,25);
             ctx.move_to(24.748737335205078,24.748737335205078);
             ctx.qcurve_to(9.899494171142578,23.899494171142578,-0.0000015298985545086907,35);
             ctx.qcurve_to(-9.899496078491211,23.899494171142578,-24.748737335205078,24.748737335205078);
@@ -897,6 +904,75 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx) {
             ctx.fill();
             ctx.stroke();
             break;
+        case PetalID::kHomingMissile: {
+            ctx.scale(0.8);
+            float x = -20;
+            float y = 0;
+            if (BitMath::at(attrs.flags, PetalRenderFlags::kAnimated)) {
+                float animation = sinf(attrs.animation * 0.015);
+                x = animation * 5 - 20;
+                y = (1.0 - (animation + 1.0) * 0.5) * 0.5 + 0.5;
+            }
+            ctx.set_fill(0xffeb4c34);
+            ctx.begin_path();
+            ctx.move_to(-13, -7);
+            ctx.line_to(x - 13, y * (frand() * 6 - 3));
+            ctx.line_to(-13, 7);
+            ctx.fill();
+            ctx.set_fill(0xffebe834);
+            ctx.begin_path();
+            ctx.move_to(-13, -7 * 0.3);
+            ctx.line_to(x * 0.3 - 13, y * 0.3 * (frand() * 6 - 3));
+            ctx.line_to(-13, 7 * 0.3);
+            ctx.fill();
+            ctx.set_fill(0xff7c7c7c);
+            ctx.begin_path();
+            // ctx.move_to(9.965492248535156, 2.27591609954834);
+            // ctx.line_to(-12.034507751464844, -7.72408390045166);
+            // ctx.line_to(-11, -10);
+            // ctx.line_to(-8.5, -10);
+            // ctx.line_to(-8.5, 10);
+            // ctx.line_to(-11, 10);
+            // ctx.line_to(-12.034507751464844, 7.72408390045166);
+            // ctx.line_to(9.965492248535156, -2.27591609954834);
+            // ctx.line_to(11, 0);
+            // ctx.line_to(9.965492248535156, 2.27591609954834);
+            ctx.move_to(12.034507751464844, -2.27591609954834);
+            ctx.qcurve_to(12.447210311889648, -2.0883240699768066, 12.767766952514648, -1.7677669525146484);
+            ctx.qcurve_to(13.088323593139648, -1.4472095966339111, 13.27591609954834, -1.034507393836975);
+            ctx.qcurve_to(13.704421997070312, -0.0917920470237732, 13.340822219848633, 0.8778084516525269);
+            ctx.qcurve_to(12.977222442626953, 1.8474090099334717, 12.034507751464844, 2.27591609954834);
+            ctx.line_to(-9.965492248535156, 12.27591609954834);
+            ctx.qcurve_to(-10.209159851074219, 12.386674880981445, -10.47075080871582, 12.443336486816406);
+            ctx.qcurve_to(-10.732342720031738, 12.5, -11, 12.5);
+            ctx.qcurve_to(-12.03553295135498, 12.499999046325684, -12.767765045166016, 11.767765998840332);
+            ctx.qcurve_to(-13.499999046325684, 11.03553295135498, -13.5, 10);
+            ctx.line_to(-13.5, -10);
+            ctx.qcurve_to(-13.500000953674316, -10.267658233642578, -13.443338394165039, -10.529250144958496);
+            ctx.qcurve_to(-13.386674880981445, -10.790842056274414, -13.27591609954834, -11.034507751464844);
+            ctx.qcurve_to(-12.847408294677734, -11.977222442626953, -11.8778076171875, -12.340822219848633);
+            ctx.qcurve_to(-10.908206939697266, -12.704421997070312, -9.965492248535156, -12.27591609954834);
+            ctx.line_to(12.034507751464844, -2.27591609954834);
+            ctx.fill();
+            ctx.set_fill(0xff999999);
+            ctx.begin_path();
+            ctx.move_to(11, 0);
+            ctx.line_to(-11, -10);
+            ctx.line_to(-11, 10);
+            ctx.line_to(11, 0);
+            ctx.fill();
+            uint8_t red = !BitMath::at(attrs.flags, PetalRenderFlags::kAnimated) ||
+                (BitMath::at(attrs.flags, PetalRenderFlags::kSpecial) && fmod(attrs.special_animation, 400) < 200);
+            ctx.set_fill(red ? 0xffcf0000 : 0xff7c7c7c);
+            ctx.begin_path();
+            ctx.arc(0, 0, 2);
+            ctx.fill();
+            ctx.set_fill(red ? 0xffff0000 : 0xff999999);
+            ctx.begin_path();
+            ctx.arc(0, 0, 4.0 / 3);
+            ctx.fill();
+            break;
+        }
         default:
             assert(id < PetalID::kNumPetals);
             assert(!"didn't cover petal render");
@@ -904,7 +980,7 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx) {
     }
 }
 
-void draw_static_petal(PetalID::T id, Renderer &ctx) {
+void draw_static_petal(PetalID::T id, Renderer &ctx, PetalRenderAttributes attrs) {
     struct PetalData const &data = PETAL_DATA[id];
     uint32_t count = data.count;
     if (count == 0) count = 1;
@@ -916,7 +992,7 @@ void draw_static_petal(PetalID::T id, Renderer &ctx) {
         ctx.rotate(i * 2 * M_PI / data.count);
         if (data.count > 1) ctx.translate(rad, 0);
         ctx.rotate(data.attributes.icon_angle);
-        draw_static_petal_single(id, ctx);
+        draw_static_petal_single(id, ctx, attrs);
     }
 }
 
@@ -950,7 +1026,7 @@ void draw_loadout_background(Renderer &ctx, uint8_t id, float reload) {
         RenderContext r(&ctx);
         ctx.scale(0.833);
         if (PETAL_DATA[id].radius > 20) ctx.scale(20 / PETAL_DATA[id].radius);
-        draw_static_petal(id, ctx);
+        draw_static_petal(id, ctx, {});
     }
     float text_width = 12 * Renderer::get_ascii_text_size(PETAL_DATA[id].name);
     if (text_width < 50) text_width = 12;

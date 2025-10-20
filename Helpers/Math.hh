@@ -15,6 +15,7 @@ float lerp(float, float, float);
 float angle_lerp(float, float, float);
 float normalize_angle(float);
 float angle_within(float, float, float);
+float angle_between(float, float);
 
 class LerpFloat {
     float value;

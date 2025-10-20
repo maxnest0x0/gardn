@@ -10,7 +10,6 @@ float const PLAYER_ACCELERATION = 5.0f;
 float const DEFAULT_FRICTION = 1.0f/3.0f;
 float const SUMMON_RETREAT_RADIUS = 600.0f;
 float const DIGGER_SPAWN_CHANCE = 0.25f;
-float const TEAMMATE_HEAL_RADIUS = 200.0f;
 
 float const BASE_FLOWER_RADIUS = 25.0f;
 float const BASE_PETAL_ROTATION_SPEED = 2.5f;
@@ -679,6 +678,70 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
             .icon_angle = 0.5
         }
     },
+    {
+        .name = "Missile",
+        .description = "You can actually shoot this one",
+        .health = 5.0,
+        .damage = 25.0,
+        .radius = 10.0,
+        .reload = 1.0,
+        .count = 1,
+        .rarity = RarityID::kLegendary,
+        .attributes = {
+            .secondary_reload = 0.5,
+            .defend_only = 1,
+            .icon_angle = 1,
+            .rotation_style = PetalAttributes::kFollowRot
+        }
+    },
+    {
+        .name = "Missile",
+        .description = "Locked on",
+        .health = 5.0,
+        .damage = 25.0,
+        .radius = 11.0,
+        .reload = 1.0,
+        .count = 1,
+        .rarity = RarityID::kMythic,
+        .attributes = {
+            .secondary_reload = 0.5,
+            .defend_only = 1,
+            .icon_angle = 1,
+            .rotation_style = PetalAttributes::kFollowRot
+        }
+    },
+    {
+        .name = "Egg",
+        .description = "Something interesting might pop out of this",
+        .health = 50.0,
+        .damage = 1.0,
+        .radius = 17.0,
+        .reload = 1.0,
+        .count = 2,
+        .rarity = RarityID::kLegendary,
+        .attributes = {
+            .secondary_reload = 5,
+            .defend_only = 1,
+            .rotation_style = PetalAttributes::kNoRot,
+            .spawns = MobID::kHornet
+        }
+    },
+    {
+        .name = "Egg",
+        .description = "Something massive might pop out of this",
+        .health = 250.0,
+        .damage = 1.0,
+        .radius = 20.0,
+        .reload = 1.0,
+        .count = 1,
+        .rarity = RarityID::kMythic,
+        .attributes = {
+            .secondary_reload = 25,
+            .defend_only = 1,
+            .rotation_style = PetalAttributes::kNoRot,
+            .spawns = MobID::kMassiveBeetle
+        }
+    },
 }};
 
 std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
@@ -756,7 +819,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {35.0},
         .xp = 10,
         .drops = {
-            PetalID::kIris, PetalID::kSalt, PetalID::kWing, PetalID::kTriplet
+            PetalID::kIris, PetalID::kSalt, PetalID::kWing, PetalID::kTriplet, PetalID::kMassiveBeetleEgg
         },
         .attributes = {}
     },
@@ -810,7 +873,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {40.0},
         .xp = 12,
         .drops = {
-            PetalID::kDandelion, PetalID::kMissile, PetalID::kWing, PetalID::kBubble, PetalID::kAntennae
+            PetalID::kDandelion, PetalID::kMissile, PetalID::kWing, PetalID::kBubble, PetalID::kAntennae, PetalID::kHornetEgg
         },
         .attributes = {
             .aggro_radius = 600
@@ -932,7 +995,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {35.0},
         .xp = 10,
         .drops = {
-            PetalID::kIris, PetalID::kPincer, PetalID::kTriplet, PetalID::kLotus
+            PetalID::kIris, PetalID::kPincer, PetalID::kTriplet, PetalID::kLotus, PetalID::kGuidedMissile
         }, 
         .attributes = {
             .poison_damage = {
@@ -950,7 +1013,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {15.0},
         .xp = 8,
         .drops = {
-            PetalID::kStinger, PetalID::kWeb, PetalID::kFaster, PetalID::kTriweb
+            PetalID::kStinger, PetalID::kWeb, PetalID::kFaster, PetalID::kTriweb, PetalID::kHomingMissile
         },
         .attributes = { 
             .poison_damage = {

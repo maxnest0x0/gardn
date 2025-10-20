@@ -13,8 +13,8 @@
 
 void render_mob(Renderer &ctx, Entity const &ent) {
     uint32_t flags = 0;
-    if (ent.get_team() == Game::simulation.get_ent(Game::camera_id).get_team()) BitMath::set(flags, 0);
-    if (ent.has_component(kSegmented)) BitMath::set(flags, 1);
+    if (ent.get_team() == Game::simulation.get_ent(Game::camera_id).get_team()) BitMath::set(flags, MobRenderFlags::kFriendly);
+    if (ent.has_component(kSegmented)) BitMath::set(flags, MobRenderFlags::kBodySegment);
     MobRenderAttributes attrs = {ent.animation, ent.get_radius(), ent.id.id, flags, ent.get_color()};
     if (ent.has_component(kFlower)) {
         attrs.flower_attrs = {

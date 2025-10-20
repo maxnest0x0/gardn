@@ -20,6 +20,11 @@ void Entity::tick_lerp(float amt) {
             if (lifetime < TPS)
                 animation = lerp(animation, 1, amt * 0.75);
             else animation = 1;
+        } else if (has_component(kPetal)) {
+            animation += Ui::dt;
+            if (BitMath::at(get_petal_flags(), PetalFlags::kLockedOn))
+                special_animation += Ui::dt;
+            else special_animation = 0;
         } else {
             Vector vel(x - prev_x, y - prev_y);
             animation += (1 + 0.75 * vel.magnitude()) * 0.075;

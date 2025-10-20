@@ -31,9 +31,9 @@ void Particle::tick_title(Renderer &ctx, double dt) {
         if (PETAL_DATA[part.id].attributes.rotation_style == PetalAttributes::kPassiveRot)
             ctx.rotate(part.angle);
         if (part.id == PetalID::kPeas || part.id == PetalID::kPoisonPeas)
-            draw_static_petal(part.id, ctx);
+            draw_static_petal(part.id, ctx, {});
         else
-            draw_static_petal_single(part.id, ctx);
+            draw_static_petal_single(part.id, ctx, {});
     }
     for (size_t i = 0; i < 4; ++i) {
         if (frand() > 0.02) continue;

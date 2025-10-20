@@ -7,7 +7,7 @@
 
 #include <cmath>
 
-#define SET_BASE_COLOR(set_color) { if (!BitMath::at(flags, 0)) base_color = set_color; else { base_color = FLOWER_COLORS[attr.color]; } }
+#define SET_BASE_COLOR(set_color) { if (!BitMath::at(flags, MobRenderFlags::kFriendly)) base_color = set_color; else { base_color = FLOWER_COLORS[attr.color]; } }
 
 void draw_static_mob(MobID::T mob_id, Renderer &ctx, MobRenderAttributes attr) {
     float radius = attr.radius;
@@ -297,7 +297,7 @@ void draw_static_mob(MobID::T mob_id, Renderer &ctx, MobRenderAttributes attr) {
             ctx.fill();
             break;
         case MobID::kHornet:
-            SET_BASE_COLOR(0xffffe763)
+            SET_BASE_COLOR(0xffffd363)
             ctx.set_fill(0xff333333);
             ctx.set_stroke(0xff292929);
             ctx.set_line_width(5);
@@ -411,7 +411,7 @@ void draw_static_mob(MobID::T mob_id, Renderer &ctx, MobRenderAttributes attr) {
             ctx.set_stroke(Renderer::HSV(base_color, 0.8));
             ctx.set_line_width(7);
             ctx.stroke();
-            if (!BitMath::at(flags, 1)) {
+            if (!BitMath::at(flags, MobRenderFlags::kBodySegment)) {
                 ctx.begin_path();
                 ctx.move_to(25,-10);
                 ctx.qcurve_to(45,-10,55,-30);

@@ -30,14 +30,13 @@ static void draw_eyes(Renderer &ctx, FlowerRenderAttributes attributes, std::fun
 
 void draw_static_flower(Renderer &ctx, FlowerRenderAttributes attributes) {
     ctx.scale(attributes.radius / 25);
+    uint32_t petal_flags = 0;
+    BitMath::set(petal_flags, PetalRenderFlags::kEquipped);
+    BitMath::set(petal_flags, PetalRenderFlags::kAnimated);
     if (BitMath::at(attributes.equip_flags, EquipmentFlags::kCutter)) {
         RenderContext context(&ctx);
         ctx.rotate(attributes.cutter_angle);
-        ctx.set_fill(0xff111111);
-        ctx.begin_path();
-        ctx.arc(0, 0, 27.5);
-        ctx.fill();
-        draw_static_petal_single(PetalID::kCutter, ctx);
+        draw_static_petal_single(PetalID::kCutter, ctx, { .flags = petal_flags });
     }
     uint32_t base_color = FLOWER_COLORS[attributes.color];
     if (BitMath::at(attributes.face_flags, FaceFlags::kPoisoned)) 
@@ -147,17 +146,17 @@ void draw_static_flower(Renderer &ctx, FlowerRenderAttributes attributes) {
             ctx.stroke();
         }
         else
-            draw_static_petal(PetalID::kThirdEye, ctx);
+            draw_static_petal(PetalID::kThirdEye, ctx, { .flags = petal_flags, .eye_x = attributes.eye_x, .eye_y = attributes.eye_y });
     }
     if (BitMath::at(attributes.equip_flags, EquipmentFlags::kObserver))
     {
         RenderContext g(&ctx);
         ctx.translate(0, -35);
-        draw_static_petal(PetalID::kObserver, ctx);
+        draw_static_petal(PetalID::kObserver, ctx, { .flags = petal_flags });
     } else if (BitMath::at(attributes.equip_flags, EquipmentFlags::kAntennae))
     {
         RenderContext g(&ctx);
         ctx.translate(0, -35);
-        draw_static_petal(PetalID::kAntennae, ctx);
+        draw_static_petal(PetalID::kAntennae, ctx, { .flags = petal_flags });
     }
 }

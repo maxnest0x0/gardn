@@ -33,6 +33,11 @@ static Element *make_entries(std::initializer_list<std::string const> contents) 
 
 static Element *make_changelog_contents() {
     Element *elt = new Ui::VContainer({
+        make_date("October 20th 2025"),
+        make_entries({
+            "Added 4 new petals"
+        }),
+        make_divider(),
         make_date("October 6th 2025"),
         make_entries({
             "Added a button to force update to the latest game version"

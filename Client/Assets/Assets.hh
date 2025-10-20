@@ -25,13 +25,36 @@ struct MobRenderAttributes {
     FlowerRenderAttributes flower_attrs;
 };
 
+struct PetalRenderAttributes {
+    float animation;
+    float special_animation;
+    uint32_t flags;
+    float eye_x;
+    float eye_y;
+};
+
+namespace MobRenderFlags {
+    enum {
+        kFriendly,
+        kBodySegment
+    };
+};
+
+namespace PetalRenderFlags {
+    enum {
+        kEquipped,
+        kAnimated,
+        kSpecial
+    };
+};
+
 void draw_loadout_background(Renderer &, PetalID::T, float=1);
 
 void draw_static_flower(Renderer &, FlowerRenderAttributes);
 
-void draw_static_petal_single(PetalID::T, Renderer &);
+void draw_static_petal_single(PetalID::T, Renderer &, PetalRenderAttributes);
 
-void draw_static_petal(PetalID::T, Renderer &);
+void draw_static_petal(PetalID::T, Renderer &, PetalRenderAttributes);
 
 void draw_static_mob(MobID::T, Renderer &, MobRenderAttributes);
 

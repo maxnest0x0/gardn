@@ -27,8 +27,30 @@ void tick_petal_behavior(Simulation *sim, Entity &petal) {
     }
     if (BitMath::at(petal.flags, EntityFlags::kIsDespawning)) {
         switch (petal.get_petal_id()) {
-            case PetalID::kMissile: {
+            case PetalID::kMissile:
+            case PetalID::kGuidedMissile: {
                 petal.acceleration.unit_normal(petal.get_angle()).set_magnitude(4 * PLAYER_ACCELERATION);
+                break;
+            }
+            case PetalID::kHomingMissile: {
+                EntityID last_target = petal.target;
+                uint8_t flags = petal.get_petal_flags();
+                if (!sim->ent_alive(petal.target))
+                    petal.target = find_nearest_enemy_within_angle(sim, petal, 1000, M_PI / 4);
+                if (petal.target != NULL_ENTITY) {
+                    BitMath::set(flags, PetalFlags::kLockedOn);
+                    Entity &target = sim->get_ent(petal.target);
+                    Vector v(target.get_x() - petal.get_x(), target.get_y() - petal.get_y());
+                    float angle = v.angle();
+                    if (petal.target != last_target)
+                        petal.last_target_angle = angle;
+                    float delta = fclamp(4 * angle_between(petal.last_target_angle, angle), -0.25, 0.25);
+                    petal.set_angle(petal.get_angle() + delta);
+                    petal.last_target_angle = angle;
+                } else
+                    BitMath::unset(flags, PetalFlags::kLockedOn);
+                petal.set_petal_flags(flags);
+                petal.acceleration.unit_normal(petal.get_angle()).set_magnitude(3 * PLAYER_ACCELERATION);
                 break;
             }
             case PetalID::kMoon: {
@@ -48,26 +70,12 @@ void tick_petal_behavior(Simulation *sim, Entity &petal) {
         if (petal.secondary_reload > petal_data.attributes.secondary_reload * TPS) {
             if (petal_data.attributes.burst_heal > 0) {
                 EntityID potential = NULL_ENTITY;
-                float min_health_ratio = 1;
                 if (player.health < player.max_health &&
                     player.dandy_ticks == 0 &&
                     !BitMath::at(player.flags, EntityFlags::kZombie))
                     potential = player.id;
                 else
-                    sim->spatial_hash.query(player.get_x(), player.get_y(),
-                        TEAMMATE_HEAL_RADIUS, TEAMMATE_HEAL_RADIUS, [&](Simulation *sim, Entity &ent){
-                            if (!sim->ent_alive(ent.id)) return;
-                            if (!ent.has_component(kFlower)) return;
-                            if (ent.get_team() != player.get_team()) return;
-                            if (ent.dandy_ticks > 0) return;
-                            if (BitMath::at(ent.flags, EntityFlags::kZombie)) return;
-                            float health_ratio = ent.health / ent.max_health;
-                            if (health_ratio >= min_health_ratio) return;
-                            float dist = Vector(ent.get_x() - player.get_x(), ent.get_y() - player.get_y()).magnitude();
-                            if (dist > TEAMMATE_HEAL_RADIUS) return;
-                            potential = ent.id;
-                            min_health_ratio = health_ratio;
-                        });
+                    potential = find_teammate_to_heal(sim, player, 150);
                 if (potential != NULL_ENTITY) {
                     Entity &ent = sim->get_ent(potential);
                     Vector delta(ent.get_x() - petal.get_x(), ent.get_y() - petal.get_y());
@@ -82,8 +90,18 @@ void tick_petal_behavior(Simulation *sim, Entity &petal) {
             }
             switch (petal.get_petal_id()) {
                 case PetalID::kMissile:
+                case PetalID::kHomingMissile:
+                    if (BitMath::at(player.input, InputFlags::kAttacking))
+                        entity_set_despawn_tick(petal, 3 * TPS);
+                    break;
+                case PetalID::kGuidedMissile:
                     if (BitMath::at(player.input, InputFlags::kAttacking)) {
-                        petal.acceleration.unit_normal(petal.get_angle()).set_magnitude(4 * PLAYER_ACCELERATION);
+                        EntityID target_id = find_nearest_enemy_within_angle(sim, petal, 1000, M_PI / 4);
+                        if (target_id != NULL_ENTITY) {
+                            Entity &target = sim->get_ent(target_id);
+                            Vector v(target.get_x() - petal.get_x(), target.get_y() - petal.get_y());
+                            petal.set_angle(v.angle());
+                        }
                         entity_set_despawn_tick(petal, 3 * TPS);
                     }
                     break;

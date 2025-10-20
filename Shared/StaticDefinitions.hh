@@ -76,6 +76,10 @@ namespace PetalID {
         kBone,
         kYucca,
         kCorn,
+        kGuidedMissile,
+        kHomingMissile,
+        kHornetEgg,
+        kMassiveBeetleEgg,
         kNumPetals
     };
 };
@@ -184,6 +188,12 @@ namespace InputFlags {
         kDefending
     };
 }
+
+namespace PetalFlags {
+    enum {
+        kLockedOn
+    };
+};
 
 struct PoisonDamage {
     float damage;

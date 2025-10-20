@@ -48,6 +48,12 @@ float angle_within(float angle, float target, float dist) {
     return diff <= dist || diff >= 2 * M_PI - dist;
 }
 
+float angle_between(float angle, float target) {
+    float diff = normalize_angle(target - angle);
+    if (diff > M_PI) diff -= 2 * M_PI;
+    return diff;
+}
+
 LerpFloat::LerpFloat() {
     value = lerp_value = 0;
     touched = 0;
