@@ -120,7 +120,7 @@ void Client::on_message(WebSocket *ws, std::string_view message, uint64_t code) 
             camera.set_dev(dev);
             player.set_dev(dev);
             std::cout << "player_spawn" << (dev ? "_dev " : " ") << name_or_unnamed(name)
-                << " <" << +player.id.hash << "," << +player.id.id << ">" << std::endl;
+                << " <" << +player.id.hash << "," << +player.id.id << ">\n";
             break;
         }
         case Serverbound::kPetalDelete: {
@@ -174,7 +174,7 @@ void Client::on_message(WebSocket *ws, std::string_view message, uint64_t code) 
             Entity &player = simulation->get_ent(camera.get_player());
             if (player.chat_sent != NULL_ENTITY) break;
             player.chat_sent = alloc_chat(simulation, text, player).id;
-            std::cout << "chat " << name_or_unnamed(player.get_name()) << ": " << text << std::endl;
+            std::cout << "chat " << name_or_unnamed(player.get_name()) << ": " << text << '\n';
             break;
         }
     }

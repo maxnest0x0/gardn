@@ -95,7 +95,9 @@ Entity &alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, EntityID c
         Entity &head = __alloc_mob(sim, mob_id, x, y, team);
         //head.add_component(kSegmented);
         Entity *curr = &head;
-        for (uint32_t i = 1; i < data.attributes.segments; ++i) {
+        uint32_t count = data.attributes.segments;
+        if (frand() < 0.001) count *= 5;
+        for (uint32_t i = 1; i < count; ++i) {
             Entity &seg = __alloc_mob(sim, mob_id, x, y, team);
             seg.add_component(kSegmented);
             seg.seg_head = curr->id;

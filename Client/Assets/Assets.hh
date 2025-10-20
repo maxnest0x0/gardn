@@ -52,9 +52,9 @@ void draw_loadout_background(Renderer &, PetalID::T, float=1);
 
 void draw_static_flower(Renderer &, FlowerRenderAttributes);
 
-void draw_static_petal_single(PetalID::T, Renderer &, PetalRenderAttributes);
+void draw_static_petal_single(PetalID::T, Renderer &, PetalRenderAttributes = {});
 
-void draw_static_petal(PetalID::T, Renderer &, PetalRenderAttributes);
+void draw_static_petal(PetalID::T, Renderer &, PetalRenderAttributes = {});
 
 void draw_static_mob(MobID::T, Renderer &, MobRenderAttributes);
 
