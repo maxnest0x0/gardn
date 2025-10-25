@@ -176,7 +176,7 @@ void tick_player_behavior(Simulation *sim, Entity &player) {
                     petal.acceleration = wanting;
                     game_tick_t sec_reload_ticks = petal_data.attributes.secondary_reload * TPS;
                     if (petal_data.attributes.spawns != MobID::kNumMobs &&
-                        petal.secondary_reload > sec_reload_ticks) {
+                        petal.secondary_reload >= sec_reload_ticks) {
                         uint8_t spawn_id = petal_data.attributes.spawns;
                         Entity &mob = alloc_mob(sim, spawn_id, petal.get_x(), petal.get_y(), petal.get_team());
                         mob.set_parent(player.id);
