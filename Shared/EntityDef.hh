@@ -112,14 +112,20 @@ SINGLE(Chat, text, std::string)
     \
     MULTIPLE(loadout, LoadoutSlot, MAX_SLOT_COUNT, .reset()) \
     SINGLE(heading_angle, float, =0) \
-    SINGLE(input, uint8_t, =0) \
     SINGLE(player_count, uint32_t, =0) \
+    SINGLE(flags, uint16_t, =0) \
+    SINGLE(input, uint8_t, =0) \
     \
     SINGLE(slow_ticks, game_tick_t, =0) \
     SINGLE(slow_inflict, game_tick_t, =0) \
     SINGLE(immunity_ticks, game_tick_t, =0) \
     SINGLE(dandy_ticks, game_tick_t, =0) \
     SINGLE(poison_ticks, game_tick_t, =0) \
+    SINGLE(despawn_tick, game_tick_t, =0) \
+    SINGLE(secondary_reload, game_tick_t, =0) \
+    SINGLE(ai_tick, game_tick_t, =0) \
+    SINGLE(ai_shooting_tick, game_tick_t, =0) \
+    \
     SINGLE(poison_inflicted, float, =0) \
     SINGLE(poison_dealer, EntityID, =NULL_ENTITY) \
     SINGLE(poison_damage, PoisonDamage, ={}) \
@@ -137,15 +143,10 @@ SINGLE(Chat, text, std::string)
     SINGLE(last_target_angle, float, =0) \
     SINGLE(seg_head, EntityID, =NULL_ENTITY) \
     SINGLE(detection_radius, float, =0) \
-    SINGLE(ai_tick, game_tick_t, =0) \
-    SINGLE(ai_shooting_tick, game_tick_t, =0) \
     SINGLE(ai_state, uint8_t, =0) \
     \
     SINGLE(zone, uint8_t, =0) \
-    SINGLE(flags, uint8_t, =0) \
     SINGLE(deletion_tick, uint8_t, =0) \
-    SINGLE(despawn_tick, game_tick_t, =0) \
-    SINGLE(secondary_reload, game_tick_t, =0) \
     SINGLE(deleted_petals, circ_arr_t, ={}) \
     SINGLE(client, Client *, =nullptr) \
     \

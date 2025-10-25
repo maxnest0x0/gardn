@@ -117,6 +117,7 @@ void Element::on_render_tooltip(Renderer &ctx) {
     if (tooltip_animation < 0.01 && !rendering_tooltip)
         tooltip = nullptr;
     if (tooltip != nullptr) {
+        tooltip->refactor();
         ctx.reset_transform();
         if (screen_x < (tooltip->width / 2 + 10) * Ui::scale)
             ctx.translate((tooltip->width / 2 + 10) * Ui::scale, screen_y);
