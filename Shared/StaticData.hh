@@ -41,7 +41,7 @@ inline std::array const MAP_DATA = std::to_array<struct ZoneDefinition>({
             { MobID::kCentipede, 10000 },
             { MobID::kBoulder, 10000 },
             { MobID::kMassiveLadybug, 200 },
-            { MobID::kSquare, 1 }
+            { MobID::kSquare, 10 }
         },
         .difficulty = 0,
         .color = 0xff1ea761,
@@ -52,7 +52,7 @@ inline std::array const MAP_DATA = std::to_array<struct ZoneDefinition>({
         .top = 0,
         .right = 20000,
         .bottom = 4000,
-        .density = 1,
+        .density = 2,
         .drop_multiplier = 0.15,
         .spawns = {
             { MobID::kCactus, 400000 },
@@ -66,7 +66,7 @@ inline std::array const MAP_DATA = std::to_array<struct ZoneDefinition>({
             { MobID::kAntHole, 2000 },
             { MobID::kAntBurrow, 2000 },
             { MobID::kShinyLadybug, 1000 },
-            { MobID::kSquare, 1 }
+            { MobID::kSquare, 10 }
         },
         .difficulty = 1,
         .color = 0xffdecf7c,
@@ -77,7 +77,7 @@ inline std::array const MAP_DATA = std::to_array<struct ZoneDefinition>({
         .top = 0,
         .right = 30000,
         .bottom = 4000,
-        .density = 1,
+        .density = 3,
         .drop_multiplier = 0.1,
         .spawns = {
             { MobID::kSpider, 100000 },
@@ -91,7 +91,7 @@ inline std::array const MAP_DATA = std::to_array<struct ZoneDefinition>({
             { MobID::kAntBurrow, 5000 },
             { MobID::kMassiveBeetle, 2000 },
             { MobID::kAntHole, 2000 },
-            { MobID::kSquare, 1 }
+            { MobID::kSquare, 10 }
         },
         .difficulty = 2,
         .color = 0xffb06655,
@@ -102,7 +102,7 @@ inline std::array const MAP_DATA = std::to_array<struct ZoneDefinition>({
         .top = 0,
         .right = 40000,
         .bottom = 4000,
-        .density = 1,
+        .density = 4,
         .drop_multiplier = 0.025,
         .spawns = {
             { MobID::kDarkLadybug, 150000 },
@@ -113,7 +113,7 @@ inline std::array const MAP_DATA = std::to_array<struct ZoneDefinition>({
             { MobID::kEvilCentipede, 10000 },
             { MobID::kMassiveBeetle, 2500 },
             { MobID::kAntHole, 2500 },
-            { MobID::kSquare, 1 }
+            { MobID::kSquare, 10 }
         },
         .difficulty = 3,
         .color = 0xff777777,

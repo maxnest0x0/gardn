@@ -9,7 +9,7 @@ float const PETAL_DISABLE_DELAY = 45.0f; //seconds
 float const PLAYER_ACCELERATION = 5.0f;
 float const DEFAULT_FRICTION = 1.0f/3.0f;
 float const SUMMON_RETREAT_RADIUS = 600.0f;
-float const DIGGER_SPAWN_CHANCE = 0.25f;
+float const DIGGER_SPAWN_CHANCE = 0.1f;
 uint32_t const FIRE_ANT_COUNT = 25;
 
 float const BASE_FLOWER_RADIUS = 25.0f;
@@ -646,9 +646,9 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
         .name = "Rice",
         .description = "Spawns instantly, but not very strong",
         .health = 1.0,
-        .damage = 4.0,
+        .damage = 5.0,
         .radius = 13.0,
-        .reload = 0.05,
+        .reload = 0.0,
         .count = 1,
         .rarity = RarityID::kEpic,
         .attributes = {
@@ -893,7 +893,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {30.0},
         .xp = 5,
         .drops = {
-            PetalID::kDahlia, PetalID::kWing, PetalID::kYinYang, PetalID::kAzalea
+            PetalID::kDahlia, PetalID::kWing, PetalID::kYinYang, PetalID::kAzalea, PetalID::kTriplet
         },
         .attributes = {}
     },
@@ -981,7 +981,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {35.0},
         .xp = 3,
         .drops = {
-            PetalID::kIris, PetalID::kPoisonPeas, PetalID::kBlueIris
+            PetalID::kIris, PetalID::kPoisonPeas, PetalID::kBlueIris, PetalID::kTriplet
         },
         .attributes = { 
             .segments = 10, 
@@ -1118,7 +1118,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .name = "Digger",
         .description = "Friend or foe? You'll never know...",
         .rarity = RarityID::kEpic,
-        .health = {250.0},
+        .health = {1000.0},
         .damage = 25.0,
         .radius = {40.0},
         .xp = 0,
