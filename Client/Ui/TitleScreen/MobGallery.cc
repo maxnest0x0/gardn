@@ -62,24 +62,30 @@ static Element *make_mob_stat_container(MobID::T id) {
     std::vector<Ui::Element *> stats;
     struct MobData const &mob_data = MOB_DATA[id];
     struct MobAttributes const &attrs = mob_data.attributes;
-    stats.push_back(new Ui::HContainer({
-        new Ui::StaticText(12, "Health: ", { .fill = 0xff77ff77 }),
-        new Ui::StaticText(12, mob_data.health.to_string())
-    }, 0, 0, { .h_justify = Style::Left }));
-    stats.push_back(new Ui::HContainer({
-        new Ui::StaticText(12, "Damage: ", { .fill = 0xffff7777 }),
-        new Ui::StaticText(12, format_number(mob_data.damage))
-    }, 0, 0, { .h_justify = Style::Left }));
+    if (mob_data.health.lower > 0) {
+        stats.push_back(new Ui::HContainer({
+            new Ui::StaticText(12, "Health: ", { .fill = 0xff77ff77 }),
+            new Ui::StaticText(12, mob_data.health.to_string())
+        }, 0, 0, { .h_justify = Style::Left }));
+    }
+    if (mob_data.damage > 0) {
+        stats.push_back(new Ui::HContainer({
+            new Ui::StaticText(12, "Damage: ", { .fill = 0xffff7777 }),
+            new Ui::StaticText(12, format_number(mob_data.damage))
+        }, 0, 0, { .h_justify = Style::Left }));
+    }
     if (attrs.poison_damage.damage > 0) {
         stats.push_back(new Ui::HContainer({
             new Ui::StaticText(12, "Poison: ", { .fill = 0xffce76db }),
             new Ui::StaticText(12, format_number(attrs.poison_damage.damage * attrs.poison_damage.time) + " (" + format_number(attrs.poison_damage.damage) + "/s)")
         }, 0, 0, { .h_justify = Style::Left }));
     }
-    stats.push_back(new Ui::HContainer({
-        new Ui::StaticText(12, "XP: ", { .fill = 0xff7777ff }),
-        new Ui::StaticText(12, format_score(mob_data.xp))
-    }, 0, 0, { .h_justify = Style::Left }));
+    if (mob_data.xp > 0) {
+        stats.push_back(new Ui::HContainer({
+            new Ui::StaticText(12, "XP: ", { .fill = 0xff7777ff }),
+            new Ui::StaticText(12, format_score(mob_data.xp))
+        }, 0, 0, { .h_justify = Style::Left }));
+    }
     return new Ui::VContainer(stats, 0, 2, { .h_justify = Style::Left });
 }
 

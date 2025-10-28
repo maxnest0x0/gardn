@@ -112,6 +112,8 @@ namespace MobID {
         kShinyLadybug,
         kSquare,
         kDigger,
+        kFireAnt,
+        kAntBurrow,
         kNumMobs
     };
 };
@@ -252,6 +254,7 @@ struct MobAttributes {
     float aggro_radius = 500;
     uint8_t segments = 1;
     uint8_t stationary;
+    uint8_t hole;
     struct PoisonDamage poison_damage;
 };
 

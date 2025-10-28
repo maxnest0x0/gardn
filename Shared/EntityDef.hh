@@ -144,6 +144,8 @@ SINGLE(Chat, text, std::string)
     SINGLE(seg_head, EntityID, =NULL_ENTITY) \
     SINGLE(detection_radius, float, =0) \
     SINGLE(ai_state, uint8_t, =0) \
+    SINGLE(activated, uint8_t, =0) \
+    SINGLE(pending_spawn_count, uint32_t, =0) \
     \
     SINGLE(zone, uint8_t, =0) \
     SINGLE(deletion_tick, uint8_t, =0) \

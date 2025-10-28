@@ -59,7 +59,9 @@ void draw_static_mob(MobID::T mob_id, Renderer &ctx, MobRenderAttributes attr) {
             ctx.stroke();
             break;
         case MobID::kSoldierAnt:
-            SET_BASE_COLOR(0xff555555)
+        case MobID::kFireAnt:
+            if (mob_id == MobID::kSoldierAnt) SET_BASE_COLOR(0xff555555)
+            else SET_BASE_COLOR(0xffa82a00)
             ctx.set_fill(base_color);
             ctx.set_stroke(Renderer::HSV(base_color, 0.8));
             ctx.set_line_width(7);
@@ -596,7 +598,9 @@ void draw_static_mob(MobID::T mob_id, Renderer &ctx, MobRenderAttributes attr) {
             ctx.stroke();
             break;
         case MobID::kAntHole:
-            SET_BASE_COLOR(0xffb58500);
+        case MobID::kAntBurrow:
+            if (mob_id == MobID::kAntHole) SET_BASE_COLOR(0xffb58500)
+            else SET_BASE_COLOR(0xffb52d00)
             ctx.begin_path();
             ctx.arc(0,0,radius);
             ctx.set_fill(base_color);

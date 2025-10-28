@@ -42,7 +42,7 @@ static Entity &__alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, E
     mob.set_y(y);
     mob.friction = DEFAULT_FRICTION;
     mob.mass = (1 + mob.get_radius() / BASE_FLOWER_RADIUS) * (data.attributes.stationary ? 10000 : 1);
-    if (mob_id == MobID::kAntHole)
+    if (data.attributes.hole)
         BitMath::set(mob.flags, EntityFlags::kNoFriendlyCollision);
     if (team == NULL_ENTITY)
         BitMath::set(mob.flags, EntityFlags::kHasCulling);

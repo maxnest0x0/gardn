@@ -13,6 +13,7 @@ extern float const PLAYER_ACCELERATION;
 extern float const DEFAULT_FRICTION;
 extern float const SUMMON_RETREAT_RADIUS;
 extern float const DIGGER_SPAWN_CHANCE;
+extern uint32_t const FIRE_ANT_COUNT;
 
 extern float const BASE_FLOWER_RADIUS;
 extern float const BASE_PETAL_ROTATION_SPEED;
@@ -60,8 +61,10 @@ inline std::array const MAP_DATA = std::to_array<struct ZoneDefinition>({
             { MobID::kBee, 50000 },
             { MobID::kScorpion, 50000 },
             { MobID::kLadybug, 50000 },
+            { MobID::kFireAnt, 25000 },
             { MobID::kDesertCentipede, 10000 },
             { MobID::kAntHole, 2000 },
+            { MobID::kAntBurrow, 2000 },
             { MobID::kShinyLadybug, 1000 },
             { MobID::kSquare, 1 }
         },
@@ -85,6 +88,7 @@ inline std::array const MAP_DATA = std::to_array<struct ZoneDefinition>({
             { MobID::kLadybug, 50000 },
             { MobID::kCentipede, 10000 },
             { MobID::kEvilCentipede, 10000 },
+            { MobID::kAntBurrow, 5000 },
             { MobID::kMassiveBeetle, 2000 },
             { MobID::kAntHole, 2000 },
             { MobID::kSquare, 1 }

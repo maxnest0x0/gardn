@@ -48,6 +48,12 @@ void inflict_damage(Simulation *sim, EntityID const atk_id, EntityID const def_i
             }
         }
     }
+    if (defender.has_component(kMob) && defender.get_mob_id() == MobID::kAntBurrow) {
+        if (!defender.activated) {
+            defender.activated = 1;
+            defender.pending_spawn_count = FIRE_ANT_COUNT;
+        }
+    }
     // yggdrasil revive clause
     if (defender.health == 0 && defender.has_component(kFlower)) {
         if (_yggdrasil_revival_clause(sim, defender)) {

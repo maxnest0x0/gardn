@@ -417,6 +417,7 @@ void tick_ai_behavior(Simulation *sim, Entity &ent) {
             tick_default_neutral(sim, ent);
             break;
         case MobID::kSoldierAnt:
+        case MobID::kFireAnt:
         case MobID::kBeetle:
         case MobID::kMassiveBeetle:
             tick_default_aggro(sim, ent, 0.95);
@@ -453,6 +454,14 @@ void tick_ai_behavior(Simulation *sim, Entity &ent) {
             break;
         case MobID::kDigger:
             tick_digger(sim, ent);
+            break;
+        case MobID::kAntBurrow:
+            if (!ent.activated) break;
+            if (ent.pending_spawn_count > 0) {
+                Entity &child = alloc_mob(sim, MobID::kFireAnt, ent.get_x(), ent.get_y(), ent.get_team());
+                child.target = ent.target;
+                --ent.pending_spawn_count;
+            } else sim->request_delete(ent.id);
             break;
         default:
             break;

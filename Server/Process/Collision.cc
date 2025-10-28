@@ -93,12 +93,12 @@ void on_collide(Simulation *sim, Entity &ent1, Entity &ent2) {
     }
 
     if (BOTH(kHealth) && !(ent1.get_team() == ent2.get_team())) {
-        if (ent1.health > 0 && ent2.health > 0) {
+        if ((ent1.health > 0 || ent1.max_health == 0) && (ent2.health > 0 || ent2.max_health == 0)) {
             inflict_damage(sim, ent1.id, ent2.id, ent1.damage, DamageType::kContact);
             inflict_damage(sim, ent2.id, ent1.id, ent2.damage, DamageType::kContact);
         }
-        if (ent1.health == 0) sim->request_delete(ent1.id);
-        if (ent2.health == 0) sim->request_delete(ent2.id);
+        if (ent1.health == 0 && ent1.max_health > 0) sim->request_delete(ent1.id);
+        if (ent2.health == 0 && ent2.max_health > 0) sim->request_delete(ent2.id);
     }
 
     if (ent1.has_component(kDrop) && ent2.has_component(kFlower)) 

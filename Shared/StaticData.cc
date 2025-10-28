@@ -10,6 +10,7 @@ float const PLAYER_ACCELERATION = 5.0f;
 float const DEFAULT_FRICTION = 1.0f/3.0f;
 float const SUMMON_RETREAT_RADIUS = 600.0f;
 float const DIGGER_SPAWN_CHANCE = 0.25f;
+uint32_t const FIRE_ANT_COUNT = 25;
 
 float const BASE_FLOWER_RADIUS = 25.0f;
 float const BASE_PETAL_ROTATION_SPEED = 2.5f;
@@ -1066,7 +1067,8 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
             PetalID::kIris, PetalID::kWing, PetalID::kAntEgg, PetalID::kTriplet
         },
         .attributes = {
-            .stationary = 1 
+            .stationary = 1,
+            .hole = 1
         }
     },
     {
@@ -1125,6 +1127,35 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         },
         .attributes = {}
     },
+    {
+        .name = "Fire Ant",
+        .description = "This ant is on fireeeeeeeeeeeeee.",
+        .rarity = RarityID::kUnusual,
+        .health = {40.0},
+        .damage = 20.0,
+        .radius = {14.0},
+        .xp = 4,
+        .drops = {
+            PetalID::kYucca, PetalID::kWing, PetalID::kLotus, PetalID::kBone
+        }, 
+        .attributes = {}
+    },
+    {
+        .name = "Ant Burrow",
+        .description = "What could be in here?",
+        .rarity = RarityID::kRare,
+        .health = {0.0},
+        .damage = 20.0,
+        .radius = {25.0},
+        .xp = 20,
+        .drops = {
+            PetalID::kSalt, PetalID::kAntEgg, PetalID::kGoldenLeaf
+        },
+        .attributes = {
+            .stationary = 1,
+            .hole = 1
+        }
+    },
 }};
 
 std::array<StaticArray<float, MAX_DROPS_PER_MOB>, MobID::kNumMobs> const MOB_DROP_CHANCES = [](){
@@ -1143,6 +1174,10 @@ std::array<StaticArray<float, MAX_DROPS_PER_MOB>, MobID::kNumMobs> const MOB_DRO
                 for (auto const &spawn_wave : ANTHOLE_SPAWNS)
                     for (MobID::T spawn : spawn_wave)
                         MOB_SPAWN_RATES[spawn] += base_chance;
+            }
+            if (s.id == MobID::kAntBurrow) {
+                MOB_SPAWN_RATES[MobID::kDigger] += DIGGER_SPAWN_CHANCE * base_chance;
+                MOB_SPAWN_RATES[MobID::kFireAnt] += FIRE_ANT_COUNT * base_chance;
             }
         }
     }
