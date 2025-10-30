@@ -25,6 +25,10 @@ static void _update_client(Simulation *sim, Client *client) {
     Entity &team = sim->get_ent(camera.get_team());
     in_view.insert(team.minimap_dots.begin(), team.minimap_dots.end());
     #endif
+    for (EntityID dot_id : sim->arena_info.leader_dots) {
+        if (sim->get_ent(dot_id).get_team() != camera.get_team())
+            in_view.insert(dot_id);
+    }
     Writer writer(Server::OUTGOING_PACKET);
     writer.write<uint8_t>(Clientbound::kClientUpdate);
     writer.write<uint8_t>(Server::is_draining);
