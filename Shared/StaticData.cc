@@ -386,7 +386,7 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
         .radius = 15.0,
         .reload = 1.0,
         .count = 1,
-        .rarity = RarityID::kEpic,
+        .rarity = RarityID::kLegendary,
         .attributes = { 
             .secondary_reload = 2.5,
             .defend_only = 1,
@@ -1160,7 +1160,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
 
 std::array<StaticArray<float, MAX_DROPS_PER_MOB>, MobID::kNumMobs> const MOB_DROP_CHANCES = [](){
     std::array<StaticArray<float, MAX_DROPS_PER_MOB>, MobID::kNumMobs> ret;
-    double const RARITY_MULT[RarityID::kNumRarities] = {50000,15000,2500,100,10,2.5,1};
+    double const RARITY_MULT[RarityID::kNumRarities] = {10000,3000,500,20,2,0.5,1};
     double MOB_SPAWN_RATES[MobID::kNumMobs] = {0};
     double PETAL_AGGREGATE_DROPS[PetalID::kNumPetals] = {0};
     for (struct ZoneDefinition const &zone : MAP_DATA) {
