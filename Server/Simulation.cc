@@ -40,6 +40,7 @@ void Simulation::on_tick() {
         }
     }
     for_each_entity([](Simulation *sim, Entity &ent) {
+        DEBUG_ONLY(assert(!(ent.has_component(kAnimation) && sim->ent_alive(ent.id)));)
         if (ent.has_component(kPhysics) && !ent.has_component(kDot))
             sim->spatial_hash.insert(ent);
         if (BitMath::at(ent.flags, EntityFlags::kHasCulling))
@@ -83,7 +84,9 @@ void Simulation::post_tick() {
         if (!ent.pending_delete) return;
         if (!ent.has_component(kPhysics)) 
             return sim->_delete_ent(ent.id);
-        if (ent.deletion_tick >= TPS / 4) 
+        if (!ent.has_component(kAnimation) && ent.deletion_tick >= TPS / 5)
+            return sim->_delete_ent(ent.id);
+        if (ent.deletion_tick >= TPS)
             return sim->_delete_ent(ent.id);
         if (ent.deletion_tick == 0)
             entity_on_death(sim, ent);

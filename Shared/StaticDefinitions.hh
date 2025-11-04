@@ -22,7 +22,8 @@ namespace DamageType {
         kContact,
         kPoison,
         kReflect,
-        kLightning
+        kLightning,
+        kUranium
     };
 }
 
@@ -85,6 +86,7 @@ namespace PetalID {
         kGoldenLeaf,
         kLightning,
         kOldLightning,
+        kUranium,
         kNumPetals
     };
 };
@@ -156,7 +158,8 @@ namespace AIState {
 
 namespace AnimationType {
     enum {
-        kLightning
+        kLightning,
+        kUranium
     };
 };
 

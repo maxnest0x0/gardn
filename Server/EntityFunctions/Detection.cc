@@ -59,6 +59,19 @@ Entity const &last, float radius, std::function<bool(Entity const &)> predicate)
     return ret;
 }
 
+std::vector<EntityID> find_enemies_to_radiate(Simulation *simulation, Entity const &entity, float radius) {
+    std::vector<EntityID> ret;
+    simulation->spatial_hash.query(entity.get_x(), entity.get_y(), radius, radius, [&](Simulation *sim, Entity &ent){
+        if (!sim->ent_alive(ent.id)) return;
+        if (ent.get_team() == entity.get_team()) return;
+        if (ent.immunity_ticks > 0) return;
+        if (!ent.has_component(kMob) && !ent.has_component(kFlower)) return;
+        float dist = Vector(ent.get_x()-entity.get_x(),ent.get_y()-entity.get_y()).magnitude() - ent.get_radius();
+        if (dist < radius) ret.push_back(ent.id);
+    });
+    return ret;
+}
+
 EntityID find_teammate_to_heal(Simulation *simulation, Entity const &entity, float radius) {
     EntityID ret;
     float min_health_ratio = 1;

@@ -10,6 +10,7 @@ float const PLAYER_ACCELERATION = 5.0f;
 float const DEFAULT_FRICTION = 1.0f/3.0f;
 float const SUMMON_RETREAT_RADIUS = 600.0f;
 float const LIGHTNING_STRIKE_RADIUS = 300.0f;
+float const URANIUM_RADIATION_RADIUS = 1200.0f;
 float const DIGGER_SPAWN_CHANCE = 0.1f;
 uint32_t const FIRE_ANT_COUNT = 25;
 
@@ -804,6 +805,20 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
             .bounces = 15
         }
     },
+    {
+        .name = "Uranium",
+        .description = "Periodically releases radiation in a large radius. Deals 2x the damage to yourself",
+        .health = 10.0,
+        .damage = 4.0,
+        .radius = 10.0,
+        .reload = 2.5,
+        .count = 1,
+        .rarity = RarityID::kLegendary,
+        .attributes = {
+            .secondary_reload = 1.0,
+            .defend_only = 1
+        }
+    },
 }};
 
 std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
@@ -1152,7 +1167,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {40.0},
         .xp = 0,
         .drops = {
-            PetalID::kCutter
+            PetalID::kCutter, PetalID::kUranium
         },
         .attributes = {}
     },

@@ -132,6 +132,7 @@ void inflict_lightning(Simulation *sim, Entity &attacker, Entity &first, float a
         }
         curr.add_component(kAnimation);
         curr.set_anim_type(AnimationType::kLightning);
+        sim->spatial_hash.insert(curr);
         sim->request_delete(curr.id);
         last = &curr;
     }

@@ -34,9 +34,9 @@ void Entity::tick_lerp(float amt) {
         if (pending_delete) {
             if (has_component(kAnimation)) {
                 if (deletion_animation == 0)
-                    deletion_animation = fclamp(1000.0f * lifetime / TPS / 250, 0, 1);
+                    deletion_animation = 1 - powf(0.9, 60.0 * lifetime / TPS);
                 else
-                    deletion_animation = fclamp(deletion_animation + Ui::dt / 250, 0, 1);
+                    deletion_animation = lerp(deletion_animation, 1, amt * 0.5);
             }
             else
                 deletion_animation = fclamp(deletion_animation + Ui::dt / 150, 0, 1);

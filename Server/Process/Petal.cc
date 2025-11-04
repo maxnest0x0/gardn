@@ -188,6 +188,23 @@ void tick_petal_behavior(Simulation *sim, Entity &petal) {
             sim->request_delete(petal.id);
             break;
         }
+        case PetalID::kUranium: {
+            std::vector<EntityID> targets = find_enemies_to_radiate(sim, petal, URANIUM_RADIATION_RADIUS);
+            inflict_damage(sim, petal.id, petal.get_parent(), 2 * petal.damage, DamageType::kUranium);
+            for (EntityID target : targets)
+                inflict_damage(sim, petal.id, target, petal.damage, DamageType::kUranium);
+            petal.secondary_reload = 0;
+            Entity &anim = sim->alloc_ent();
+            anim.add_component(kPhysics);
+            anim.set_x(petal.get_x());
+            anim.set_y(petal.get_y());
+            anim.set_radius(URANIUM_RADIATION_RADIUS);
+            anim.add_component(kAnimation);
+            anim.set_anim_type(AnimationType::kUranium);
+            sim->spatial_hash.insert(anim);
+            sim->request_delete(anim.id);
+            break;
+        }
         default:
             break;
     }

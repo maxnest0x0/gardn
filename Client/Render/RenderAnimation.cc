@@ -35,6 +35,13 @@ void render_animation(Simulation *sim, Renderer &ctx, Entity const &ent) {
             ctx.stroke();
             break;
         }
+        case AnimationType::kUranium:
+            ctx.set_global_alpha(0.2 * (1 - ent.deletion_animation));
+            ctx.set_fill(0xff63bf2e);
+            ctx.begin_path();
+            ctx.arc(ent.get_x(), ent.get_y(), ent.get_radius() * (1 - 0.25 * ent.deletion_animation));
+            ctx.fill();
+            break;
         default:
             assert(!"Didn't cover animation render");
             break;
