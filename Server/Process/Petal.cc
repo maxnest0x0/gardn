@@ -181,6 +181,13 @@ void tick_petal_behavior(Simulation *sim, Entity &petal) {
             }
             break;
         }
+        case PetalID::kOldLightning: {
+            EntityID target = find_nearest_enemy_to_strike(sim, petal, petal, LIGHTNING_STRIKE_RADIUS, [](Entity const &){ return true; });
+            if (target == NULL_ENTITY) break;
+            inflict_lightning(sim, petal, sim->get_ent(target), petal.damage, PETAL_DATA[petal.get_petal_id()].attributes.bounces);
+            sim->request_delete(petal.id);
+            break;
+        }
         default:
             break;
     }

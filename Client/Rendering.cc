@@ -169,6 +169,10 @@ void Game::render_game() {
         _apply_damage_filter(renderer, ent);
         render_flower(renderer, ent);
     });
+    simulation.for_each<kAnimation>([](Simulation *sim, Entity const &ent){
+        RenderContext context(&renderer);
+        render_animation(sim, renderer, ent);
+    });
     simulation.for_each<kName>([](Simulation *sim, Entity const &ent){
         RenderContext context(&renderer);
         renderer.translate(ent.get_x(), ent.get_y());

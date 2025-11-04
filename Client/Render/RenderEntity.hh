@@ -2,7 +2,9 @@
 
 class Entity;
 class Renderer;
+class Simulation;
 
+void render_animation(Simulation *, Renderer &, Entity const &);
 void render_chat(Renderer &, Entity const &);
 void render_drop(Renderer &, Entity const &);
 void render_flower(Renderer &, Entity const &);

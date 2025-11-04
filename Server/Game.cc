@@ -36,6 +36,10 @@ static void _update_client(Simulation *sim, Client *client) {
     sim->spatial_hash.query(camera.get_camera_x(), camera.get_camera_y(), 
     960 / camera.get_fov() + 50, 540 / camera.get_fov() + 50, [&](Simulation *, Entity &ent){
         in_view.insert(ent.id);
+        if (ent.has_component(kSegmented) && ent.has_component(kAnimation)) {
+            if (sim->ent_exists(ent.get_seg_head())) in_view.insert(ent.get_seg_head());
+            if (sim->ent_exists(ent.get_seg_tail())) in_view.insert(ent.get_seg_tail());
+        }
     });
 
     for (EntityID const &i: client->in_view) {

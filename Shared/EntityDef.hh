@@ -23,7 +23,8 @@ typedef uint16_t game_tick_t;
     COMPONENT(Score) \
     COMPONENT(Name) \
     COMPONENT(Chat) \
-    COMPONENT(Dot)
+    COMPONENT(Dot) \
+    COMPONENT(Animation)
 
 #define PERFIELD \
 FIELDS_Physics \
@@ -35,10 +36,12 @@ FIELDS_Health \
 FIELDS_Mob \
 FIELDS_Drop \
 FIELDS_Segmented \
+FIELDS_Web \
 FIELDS_Score \
 FIELDS_Name \
 FIELDS_Chat \
-FIELDS_Dot
+FIELDS_Dot \
+FIELDS_Animation
 
 #define FIELDS_Physics \
 SINGLE(Physics, x, Float) \
@@ -85,7 +88,9 @@ SINGLE(Mob, mob_id, MobID::T)
 #define FIELDS_Drop \
 SINGLE(Drop, drop_id, PetalID::T)
 
-#define FIELDS_Segmented
+#define FIELDS_Segmented \
+SINGLE(Segmented, seg_head, EntityID) \
+SINGLE(Segmented, seg_tail, EntityID)
 
 #define FIELDS_Web
 
@@ -100,6 +105,9 @@ SINGLE(Name, nametag_visible, uint8_t)
 SINGLE(Chat, text, std::string)
 
 #define FIELDS_Dot
+
+#define FIELDS_Animation \
+SINGLE(Animation, anim_type, uint8_t)
 
 #ifdef SERVERSIDE
 #define PER_EXTRA_FIELD \
@@ -141,7 +149,6 @@ SINGLE(Chat, text, std::string)
     SINGLE(base_entity, EntityID, =NULL_ENTITY) \
     SINGLE(target, EntityID, =NULL_ENTITY) \
     SINGLE(last_target_angle, float, =0) \
-    SINGLE(seg_head, EntityID, =NULL_ENTITY) \
     SINGLE(detection_radius, float, =0) \
     SINGLE(ai_state, uint8_t, =0) \
     SINGLE(activated, uint8_t, =0) \

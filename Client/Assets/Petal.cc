@@ -979,6 +979,22 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
             ctx.fill();
             break;
         }
+        case PetalID::kLightning:
+        case PetalID::kOldLightning: {
+            ctx.set_fill(0xff29f2e5);
+            ctx.set_stroke(0xff21c4b9);
+            ctx.set_line_width(1);
+            ctx.begin_path();
+            ctx.move_to(r / 2, 0);
+            for (uint32_t i = 1; i <= 20; ++i) {
+                float radius = i % 2 ? r : r / 2;
+                float angle = i * M_PI / 10;
+                ctx.line_to(radius * cosf(angle), radius * sinf(angle));
+            }
+            ctx.fill();
+            ctx.stroke();
+            break;
+        }
         default:
             assert(id < PetalID::kNumPetals);
             assert(!"didn't cover petal render");

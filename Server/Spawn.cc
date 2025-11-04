@@ -100,7 +100,7 @@ Entity &alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, EntityID c
         for (uint32_t i = 1; i < count; ++i) {
             Entity &seg = __alloc_mob(sim, mob_id, x, y, team);
             seg.add_component(kSegmented);
-            seg.seg_head = curr->id;
+            seg.set_seg_head(curr->id);
             seg.set_angle(curr->get_angle() + frand() * 0.1 - 0.05);
             seg.set_x(curr->get_x() - (curr->get_radius() + seg.get_radius()) * cosf(seg.get_angle()));
             seg.set_y(curr->get_y() - (curr->get_radius() + seg.get_radius()) * sinf(seg.get_angle()));

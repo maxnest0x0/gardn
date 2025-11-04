@@ -15,12 +15,14 @@ inline uint32_t const MAX_PETALS_IN_CLUMP = 4;
 inline uint32_t const MAX_DIFFICULTY = 3;
 inline uint32_t const MAX_DROPS_PER_MOB = 6;
 inline uint32_t const CHAT_SIZE = 5;
+inline uint32_t const MAX_LIGHTNING_BOUNCES = 15;
 
 namespace DamageType {
     enum : uint8_t {
         kContact,
         kPoison,
-        kReflect
+        kReflect,
+        kLightning
     };
 }
 
@@ -81,6 +83,8 @@ namespace PetalID {
         kHornetEgg,
         kMassiveBeetleEgg,
         kGoldenLeaf,
+        kLightning,
+        kOldLightning,
         kNumPetals
     };
 };
@@ -147,6 +151,12 @@ namespace AIState {
         kIdleMoving,
         kReturning,
         kBasicAggro
+    };
+};
+
+namespace AnimationType {
+    enum {
+        kLightning
     };
 };
 
@@ -236,6 +246,7 @@ struct PetalAttributes {
     uint8_t spawns = MobID::kNumMobs;
     uint8_t spawn_count = 0;
     uint8_t equipment = EquipmentFlags::kNone;
+    uint8_t bounces = 0;
 };
 
 struct PetalData {

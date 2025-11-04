@@ -24,6 +24,14 @@ void inflict_damage(Simulation *sim, EntityID const atk_id, EntityID const def_i
     if (!defender.has_component(kHealth)) return;
     DEBUG_ONLY(assert(!defender.pending_delete);)
     DEBUG_ONLY(assert(defender.has_component(kHealth));)
+    if (type != DamageType::kLightning && sim->ent_alive(atk_id)) {
+        Entity &attacker = sim->get_ent(atk_id);
+        if (attacker.has_component(kPetal) && attacker.get_petal_id() == PetalID::kLightning) {
+            inflict_lightning(sim, attacker, defender, amt, PETAL_DATA[attacker.get_petal_id()].attributes.bounces);
+            sim->request_delete(atk_id);
+            return;
+        }
+    }
     if (defender.immunity_ticks > 0) return;
     if (type == DamageType::kContact) amt -= defender.armor;
     else if (type == DamageType::kPoison) amt -= defender.poison_armor;
@@ -94,6 +102,39 @@ void inflict_damage(Simulation *sim, EntityID const atk_id, EntityID const def_i
             defender.target = atk_id;
     }
     defender.last_damaged_by = attacker.base_entity;
+}
+
+void inflict_lightning(Simulation *sim, Entity &attacker, Entity &first, float amt, uint32_t bounces) {
+    DEBUG_ONLY(assert(bounces <= MAX_LIGHTNING_BOUNCES);)
+    StaticArray<Entity *, MAX_LIGHTNING_BOUNCES + 1> chain = {&attacker, &first};
+    inflict_damage(sim, attacker.id, first.id, amt, DamageType::kLightning);
+    for (uint32_t i = 0; i < bounces - 1; ++i) {
+        Entity &last = *chain[chain.size() - 1];
+        EntityID target = find_nearest_enemy_to_strike(sim, attacker, last, LIGHTNING_STRIKE_RADIUS, [&](Entity const &ent){
+            for (Entity *entity : chain)
+                if (ent.id == entity->id) return false;
+            return true;
+        });
+        if (target == NULL_ENTITY) break;
+        chain.push(&sim->get_ent(target));
+        inflict_damage(sim, attacker.id, target, amt, DamageType::kLightning);
+    }
+    Entity *last = nullptr;
+    for (Entity *ent : chain) {
+        Entity &curr = sim->alloc_ent();
+        curr.add_component(kPhysics);
+        curr.set_x(ent->get_x());
+        curr.set_y(ent->get_y());
+        curr.add_component(kSegmented);
+        if (last != nullptr) {
+            curr.set_seg_head(last->id);
+            last->set_seg_tail(curr.id);
+        }
+        curr.add_component(kAnimation);
+        curr.set_anim_type(AnimationType::kLightning);
+        sim->request_delete(curr.id);
+        last = &curr;
+    }
 }
 
 void inflict_heal(Simulation *sim, Entity &ent, float amt) {

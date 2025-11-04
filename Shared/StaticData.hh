@@ -12,6 +12,7 @@ extern float const PETAL_DISABLE_DELAY;
 extern float const PLAYER_ACCELERATION;
 extern float const DEFAULT_FRICTION;
 extern float const SUMMON_RETREAT_RADIUS;
+extern float const LIGHTNING_STRIKE_RADIUS;
 extern float const DIGGER_SPAWN_CHANCE;
 extern uint32_t const FIRE_ANT_COUNT;
 

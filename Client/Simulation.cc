@@ -16,23 +16,31 @@ void Entity::tick_lerp(float amt) {
             x.step(amt);
             y.step(amt);
         }
-        if (has_component(kDrop) || has_component(kWeb) || has_component(kChat)) {
-            if (lifetime < TPS)
-                animation = lerp(animation, 1, amt * 0.75);
-            else animation = 1;
+        if (has_component(kMob)) {
+            Vector vel(x - prev_x, y - prev_y);
+            animation += (1 + 0.75 * vel.magnitude()) * 0.075;
         } else if (has_component(kPetal)) {
             animation += Ui::dt;
             if (BitMath::at(get_petal_flags(), PetalFlags::kLockedOn))
                 special_animation += Ui::dt;
             else special_animation = 0;
         } else {
-            Vector vel(x - prev_x, y - prev_y);
-            animation += (1 + 0.75 * vel.magnitude()) * 0.075;
+            if (lifetime < TPS)
+                animation = lerp(animation, 1, amt * 0.75);
+            else animation = 1;
         }
         radius.step(amt);
         angle.step_angle(amt);
-        if (pending_delete)
-            deletion_animation = fclamp(deletion_animation + Ui::dt / 150, 0, 1);
+        if (pending_delete) {
+            if (has_component(kAnimation)) {
+                if (deletion_animation == 0)
+                    deletion_animation = fclamp(1000.0f * lifetime / TPS / 250, 0, 1);
+                else
+                    deletion_animation = fclamp(deletion_animation + Ui::dt / 250, 0, 1);
+            }
+            else
+                deletion_animation = fclamp(deletion_animation + Ui::dt / 150, 0, 1);
+        }
     }
     if (has_component(kCamera)) {
         camera_x.step(amt);

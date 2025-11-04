@@ -68,6 +68,10 @@ void Simulation::post_tick() {
         //no deletions mid tick
         ent.reset_protocol();
         ++ent.lifetime;
+        if (ent.has_component(kHealth)) {
+            ent.set_damaged(0);
+            ent.set_revived(0);
+        }
         ent.chat_sent = NULL_ENTITY;
         if (BitMath::at(ent.flags, EntityFlags::kIsDespawning)) {
             if (ent.despawn_tick == 0) sim->request_delete(ent.id);
@@ -79,7 +83,7 @@ void Simulation::post_tick() {
         if (!ent.pending_delete) return;
         if (!ent.has_component(kPhysics)) 
             return sim->_delete_ent(ent.id);
-        if (ent.deletion_tick >= TPS / 5) 
+        if (ent.deletion_tick >= TPS / 4) 
             return sim->_delete_ent(ent.id);
         if (ent.deletion_tick == 0)
             entity_on_death(sim, ent);
