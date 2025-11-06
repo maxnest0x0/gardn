@@ -23,11 +23,19 @@ Element::Element(float w, float h, Style s) : width(w), height(h), style(s) {
         style.should_render = [](){ return 1; };
 }
 
+Element::~Element() {
+    if (parent != nullptr) parent->remove_child(this);
+}
+
 void Element::add_child(Element *elt) {
     if (elt == nullptr) return;
     children.push_back(elt);
     elt->parent = this;
     //parent/child?
+}
+
+void Element::remove_child(Element *elt) {
+    std::erase(children, elt);
 }
 
 void Element::render(Renderer &ctx) {

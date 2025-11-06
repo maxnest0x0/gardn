@@ -213,6 +213,12 @@ namespace PetalFlags {
     };
 };
 
+namespace SettingFlags {
+    enum {
+        kAutoDelete
+    };
+};
+
 struct PoisonDamage {
     float damage;
     float time;

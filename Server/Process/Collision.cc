@@ -2,6 +2,7 @@
 
 #include <Shared/Simulation.hh>
 #include <Shared/Entity.hh>
+#include <Shared/Map.hh>
 
 #include <cmath>
 #include <iostream>
@@ -28,6 +29,19 @@ static void _pickup_drop(Simulation *sim, Entity &player, Entity &drop) {
         sim->request_delete(drop.id);
         //peaceful transfer, no petal tracking needed
         return;
+    }
+
+    if (!BitMath::at(player.settings, SettingFlags::kAutoDelete)) return;
+    uint32_t power = Map::difficulty_at_level(score_to_level(player.get_score()));
+    uint8_t rarity = PETAL_DATA[drop.get_drop_id()].rarity;
+    if (rarity < power) {
+        delete_petal(sim, player, drop.get_drop_id());
+        drop.set_picked_up_by(player.id);
+        drop.set_x(player.get_x());
+        drop.set_y(player.get_y());
+        BitMath::unset(drop.flags, EntityFlags::kIsDespawning);
+        sim->request_delete(drop.id);
+        //peaceful transfer, no petal tracking needed
     }
 }
 

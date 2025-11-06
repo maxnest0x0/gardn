@@ -86,7 +86,8 @@ SINGLE(Health, revived, StickyFlag)
 SINGLE(Mob, mob_id, MobID::T)
 
 #define FIELDS_Drop \
-SINGLE(Drop, drop_id, PetalID::T)
+SINGLE(Drop, drop_id, PetalID::T) \
+SINGLE(Drop, picked_up_by, EntityID)
 
 #define FIELDS_Segmented \
 SINGLE(Segmented, seg_head, EntityID) \
@@ -123,6 +124,7 @@ SINGLE(Animation, anim_type, uint8_t)
     SINGLE(player_count, uint32_t, =0) \
     SINGLE(flags, uint16_t, =0) \
     SINGLE(input, uint8_t, =0) \
+    SINGLE(settings, uint8_t, =0) \
     \
     SINGLE(slow_ticks, game_tick_t, =0) \
     SINGLE(slow_inflict, game_tick_t, =0) \

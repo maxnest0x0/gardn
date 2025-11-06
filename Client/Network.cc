@@ -53,6 +53,9 @@ void Game::send_inputs() {
         writer.write<float>(Input::game_inputs.y);
         writer.write<uint8_t>(Input::game_inputs.flags);
     }
+    uint8_t settings = 0;
+    if (Game::auto_delete) BitMath::set(settings, SettingFlags::kAutoDelete);
+    writer.write<uint8_t>(settings);
     socket.send(writer.packet, writer.at - writer.packet);
 }
 

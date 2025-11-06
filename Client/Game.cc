@@ -50,6 +50,7 @@ namespace Game {
     uint8_t simulation_ready = 0;
     uint8_t on_game_screen = 0;
     uint8_t show_debug = 0;
+    uint8_t auto_delete = 0;
 
     uint8_t show_chat = 0;
     std::string chat_text;
@@ -382,6 +383,13 @@ void Game::tick(double time) {
     }
 
     //clearing operations
+    std::erase_if(Ui::UiLoadout::deleted_drops, [](auto &iter){
+        if (!iter.second->visible) {
+            delete iter.second;
+            return true;
+        }
+        return false;
+    });
     simulation.post_tick();
     Storage::set();
     Input::reset();

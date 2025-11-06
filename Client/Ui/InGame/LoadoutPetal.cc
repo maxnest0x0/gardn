@@ -9,6 +9,7 @@
 using namespace Ui;
 
 UiLoadoutPetal *Ui::UiLoadout::petal_slots[2 * MAX_SLOT_COUNT] = {nullptr};
+std::map<EntityID, UiLoadoutDrop *> Ui::UiLoadout::deleted_drops;
 uint8_t Ui::UiLoadout::selected_with_keys = MAX_SLOT_COUNT;
 double Ui::UiLoadout::last_key_select = 0;
 uint32_t Ui::UiLoadout::num_petals_selected = 0;
@@ -234,4 +235,19 @@ void UiLoadoutPetal::on_event(uint8_t event) {
         tooltip = Ui::UiLoadout::petal_tooltips[last_id];
     } else 
         rendering_tooltip = 0;
+}
+
+UiLoadoutDrop::UiLoadoutDrop(PetalID::T id) : Element(50, 50), petal_id(id) {
+    style.should_render = [&](){ return !showed; };
+    style.animate = [&](Element *elt, Renderer &ctx){
+        UiLoadoutSlot *parent_slot = Ui::UiLoadout::petal_backgrounds[2 * MAX_SLOT_COUNT];
+        x = lerp(x, (parent_slot->screen_x - Ui::window_width / 2) / Ui::scale, Ui::lerp_amount * 0.75);
+        y = lerp(y, (parent_slot->screen_y - Ui::window_height / 2) / Ui::scale, Ui::lerp_amount * 0.75);
+        ctx.scale(animation);
+    };
+}
+
+void UiLoadoutDrop::on_render(Renderer &ctx) {
+    ctx.scale(width / 60);
+    draw_loadout_background(ctx, petal_id);
 }

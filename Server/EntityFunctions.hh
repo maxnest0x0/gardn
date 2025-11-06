@@ -22,3 +22,5 @@ EntityID find_teammate_to_heal(Simulation *, Entity const &, float);
 
 void entity_set_despawn_tick(Entity &, game_tick_t);
 void entity_clear_references(Simulation *, Entity &);
+
+void delete_petal(Simulation *, Entity &, PetalID::T);

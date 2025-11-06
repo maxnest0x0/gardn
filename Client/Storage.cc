@@ -150,7 +150,8 @@ public:
     X(3, Input::keyboard_movement) \
     X(4, Input::movement_helper) \
     X(5, Game::recovery_id) \
-    X(6, Game::seen_changelog)
+    X(6, Game::seen_changelog) \
+    X(7, Game::auto_delete)
 
 #define X(ct, name) static auto checker_##ct = MutationObserver(name);
 STORED
@@ -185,6 +186,7 @@ void Storage::retrieve() {
             uint8_t opts = reader.read<uint8_t>();
             Input::movement_helper = BitMath::at(opts, 0);
             Input::keyboard_movement = BitMath::at(opts, 1);
+            Game::auto_delete = BitMath::at(opts, 2);
         }
     }
     {
@@ -247,9 +249,11 @@ void Storage::set() {
     }
     {
         Encoder writer(&StorageProtocol::buffer[0]);
-        writer.write<uint8_t>(
-            Input::movement_helper | (Input::keyboard_movement << 1)
-        );
+        uint8_t opts = 0;
+        if (Input::movement_helper) BitMath::set(opts, 0);
+        if (Input::keyboard_movement) BitMath::set(opts, 1);
+        if (Game::auto_delete) BitMath::set(opts, 2);
+        writer.write<uint8_t>(opts);
         StorageProtocol::store("settings", writer.at - writer.base);
     }
     {
