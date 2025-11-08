@@ -81,8 +81,9 @@ EntityID find_teammate_to_heal(Simulation *simulation, Entity const &entity, flo
         if (ent.dandy_ticks > 0) return;
         if (!ent.has_component(kFlower)) return;
         if (BitMath::at(ent.flags, EntityFlags::kZombie)) return;
+        float dist = Vector(ent.get_x()-entity.get_x(),ent.get_y()-entity.get_y()).magnitude();
         float health_ratio = ent.health / ent.max_health;
-        if (health_ratio < min_health_ratio) {
+        if (dist < radius && health_ratio < min_health_ratio) {
             min_health_ratio = health_ratio;
             ret = ent.id;
         }

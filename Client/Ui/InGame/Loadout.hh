@@ -43,7 +43,7 @@ namespace Ui {
         uint8_t static_pos;
         uint8_t curr_pos;
         uint8_t no_change_ticks;
-        uint8_t selected;
+        uint8_t selected = 0;
         PetalID::T petal_id;
         PetalID::T last_id;
         UiLoadoutPetal(uint8_t);

@@ -30,7 +30,7 @@ void draw_static_mob(MobID::T mob_id, Renderer &ctx, MobRenderAttributes attr) {
             ctx.set_fill(base_color);
             ctx.set_stroke(Renderer::HSV(base_color, 0.8));
             ctx.begin_path();
-            ctx.arc(0,0,radius);
+            ctx.arc(0,0,14);
             ctx.fill();
             ctx.stroke();
             break;
@@ -54,7 +54,7 @@ void draw_static_mob(MobID::T mob_id, Renderer &ctx, MobRenderAttributes attr) {
             ctx.set_fill(base_color);
             ctx.set_stroke(Renderer::HSV(base_color, 0.8));
             ctx.begin_path();
-            ctx.arc(4,0,radius);
+            ctx.arc(4,0,14);
             ctx.fill();
             ctx.stroke();
             break;
@@ -99,7 +99,7 @@ void draw_static_mob(MobID::T mob_id, Renderer &ctx, MobRenderAttributes attr) {
             ctx.set_fill(base_color);
             ctx.set_stroke(Renderer::HSV(base_color, 0.8));
             ctx.begin_path();
-            ctx.arc(4,0,radius);
+            ctx.arc(4,0,14);
             ctx.fill();
             ctx.stroke();
             break;

@@ -175,24 +175,24 @@ UiLoadoutPetal::UiLoadoutPetal(uint8_t pos) : Element(60, 60),
             }
             //if (released)
                 //Ui::UiLoadout::petal_selected = nullptr;
-        } else if (Ui::UiLoadout::selected_with_keys + Game::loadout_count == static_pos && Game::alive()) {
-            if (!showed) lerp_amt = 1;
-            x = lerp(x, (parent_slot->screen_x - Ui::window_width / 2) / Ui::scale, lerp_amt);
-            y = lerp(y, (parent_slot->screen_y - Ui::window_height / 2) / Ui::scale, lerp_amt);
-            width = lerp(width, parent_slot->width + 20, lerp_amt);
-            height = lerp(height, parent_slot->height + 20, lerp_amt);
-            ctx.rotate(sin(Game::timestamp / 150) * 0.1);
         } else {
-            style.layer = 0;
+            if (curr_pos == 2 * MAX_SLOT_COUNT) style.layer = 1;
+            else style.layer = 0;
             if (!showed) lerp_amt = 1;
             x = lerp(x, (parent_slot->screen_x - Ui::window_width / 2) / Ui::scale, lerp_amt);
             y = lerp(y, (parent_slot->screen_y - Ui::window_height / 2) / Ui::scale, lerp_amt);
-            width = lerp(width, parent_slot->width, lerp_amt);
-            height = lerp(height, parent_slot->height, lerp_amt);
+            if (Ui::UiLoadout::selected_with_keys + Game::loadout_count == static_pos && Game::alive()) {
+                width = lerp(width, parent_slot->width + 20, lerp_amt);
+                height = lerp(height, parent_slot->height + 20, lerp_amt);
+                ctx.rotate(sin(Game::timestamp / 150) * 0.1);
+            } else {
+                width = lerp(width, parent_slot->width, lerp_amt);
+                height = lerp(height, parent_slot->height, lerp_amt);
+            }
         }
         //if (!Game::alive())
             //Ui::UiLoadout::petal_selected = nullptr;
-        ctx.scale((float) animation);
+        ctx.scale(std::min(animation * 10, 1.0f));
         if (released && selected) {
             --Ui::UiLoadout::num_petals_selected;
             selected = 0;
@@ -243,7 +243,7 @@ UiLoadoutDrop::UiLoadoutDrop(PetalID::T id) : Element(50, 50), petal_id(id) {
         UiLoadoutSlot *parent_slot = Ui::UiLoadout::petal_backgrounds[2 * MAX_SLOT_COUNT];
         x = lerp(x, (parent_slot->screen_x - Ui::window_width / 2) / Ui::scale, Ui::lerp_amount * 0.75);
         y = lerp(y, (parent_slot->screen_y - Ui::window_height / 2) / Ui::scale, Ui::lerp_amount * 0.75);
-        ctx.scale(animation);
+        ctx.scale(std::min(animation * 10, 1.0f));
     };
 }
 

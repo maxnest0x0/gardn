@@ -15,7 +15,6 @@ extern float const SUMMON_RETREAT_RADIUS;
 extern float const LIGHTNING_STRIKE_RADIUS;
 extern float const URANIUM_RADIATION_RADIUS;
 extern float const DIGGER_SPAWN_CHANCE;
-extern uint32_t const FIRE_ANT_COUNT;
 
 extern float const BASE_FLOWER_RADIUS;
 extern float const BASE_PETAL_ROTATION_SPEED;
@@ -146,4 +145,4 @@ extern uint32_t loadout_slots_at_level(uint32_t);
 
 extern float hp_at_level(uint32_t);
 
-std::string name_or_unnamed(std::string const &);
+std::string_view name_or_unnamed(std::string const &);

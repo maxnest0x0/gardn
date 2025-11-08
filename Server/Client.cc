@@ -18,6 +18,7 @@ Client::Client() : game(nullptr) {}
 
 void Client::init(uint64_t recovery_id) {
     DEBUG_ONLY(assert(game == nullptr);)
+    DEBUG_ONLY(recovery_id = 0;)
     Server::game.add_client(this, recovery_id);
 }
 

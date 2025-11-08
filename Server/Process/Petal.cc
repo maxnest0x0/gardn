@@ -79,12 +79,12 @@ void tick_petal_behavior(Simulation *sim, Entity &petal) {
     }
     if (petal_data.attributes.burst_heal > 0) {
         EntityID potential = NULL_ENTITY;
-        if (player.health < player.max_health &&
+        if (player.health < player.max_health / 2 &&
             player.dandy_ticks == 0 &&
             !BitMath::at(player.flags, EntityFlags::kZombie))
             potential = player.id;
         else
-            potential = find_teammate_to_heal(sim, player, 150);
+            potential = find_teammate_to_heal(sim, petal, 200);
         if (potential != NULL_ENTITY) {
             Entity &ent = sim->get_ent(potential);
             Vector delta(ent.get_x() - petal.get_x(), ent.get_y() - petal.get_y());

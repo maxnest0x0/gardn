@@ -12,7 +12,6 @@ float const SUMMON_RETREAT_RADIUS = 600.0f;
 float const LIGHTNING_STRIKE_RADIUS = 300.0f;
 float const URANIUM_RADIATION_RADIUS = 1200.0f;
 float const DIGGER_SPAWN_CHANCE = 0.1f;
-uint32_t const FIRE_ANT_COUNT = 25;
 
 float const BASE_FLOWER_RADIUS = 25.0f;
 float const BASE_PETAL_ROTATION_SPEED = 2.5f;
@@ -625,7 +624,7 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
         .health = 15.0,
         .damage = 15.0,
         .radius = 10.0,
-        .reload = 2.5,
+        .reload = 1.0,
         .count = 1,
         .rarity = RarityID::kEpic,
         .attributes = {}
@@ -841,7 +840,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .rarity = RarityID::kCommon,
         .health = {25.0},
         .damage = 10.0,
-        .radius = {14.0},
+        .radius = {19.0},
         .xp = 3,
         .drops = {
             PetalID::kLight, PetalID::kLeaf, PetalID::kTwin, PetalID::kCorn, PetalID::kBone
@@ -854,7 +853,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .rarity = RarityID::kUnusual,
         .health = {40.0},
         .damage = 10.0,
-        .radius = {14.0},
+        .radius = {19.0},
         .xp = 5,
         .drops = {
             PetalID::kTwin, PetalID::kIris, PetalID::kWing, PetalID::kFaster, PetalID::kTriplet
@@ -1121,7 +1120,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .rarity = RarityID::kRare,
         .health = {350.0},
         .damage = 10.0,
-        .radius = {25.0},
+        .radius = {40.0},
         .xp = 15,
         .drops = {
             PetalID::kTwin, PetalID::kIris, PetalID::kWing, PetalID::kAntEgg, PetalID::kTringer
@@ -1177,7 +1176,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .rarity = RarityID::kUnusual,
         .health = {40.0},
         .damage = 20.0,
-        .radius = {14.0},
+        .radius = {19.0},
         .xp = 4,
         .drops = {
             PetalID::kYucca, PetalID::kWing, PetalID::kLotus, PetalID::kBone
@@ -1276,7 +1275,7 @@ float hp_at_level(uint32_t level) {
     return BASE_HEALTH + level;
 }
 
-std::string name_or_unnamed(std::string const &name) {
+std::string_view name_or_unnamed(std::string const &name) {
     if (name.size() == 0) return "Unnamed";
     return name;
 }
