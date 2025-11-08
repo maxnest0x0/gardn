@@ -2,6 +2,7 @@
 
 #include <Shared/Simulation.hh>
 #include <Shared/Entity.hh>
+#include <Shared/Map.hh>
 
 #include <cmath>
 #include <iostream>
@@ -28,6 +29,19 @@ static void _pickup_drop(Simulation *sim, Entity &player, Entity &drop) {
         sim->request_delete(drop.id);
         //peaceful transfer, no petal tracking needed
         return;
+    }
+
+    if (!BitMath::at(player.settings, SettingFlags::kAutoDelete)) return;
+    uint32_t power = Map::difficulty_at_level(score_to_level(player.get_score()));
+    uint8_t rarity = PETAL_DATA[drop.get_drop_id()].rarity;
+    if (rarity < power) {
+        delete_petal(sim, player, drop.get_drop_id());
+        drop.set_picked_up_by(player.id);
+        drop.set_x(player.get_x());
+        drop.set_y(player.get_y());
+        BitMath::unset(drop.flags, EntityFlags::kIsDespawning);
+        sim->request_delete(drop.id);
+        //peaceful transfer, no petal tracking needed
     }
 }
 
@@ -93,12 +107,12 @@ void on_collide(Simulation *sim, Entity &ent1, Entity &ent2) {
     }
 
     if (BOTH(kHealth) && !(ent1.get_team() == ent2.get_team())) {
-        if (ent1.health > 0 && ent2.health > 0) {
+        if ((ent1.health > 0 || ent1.max_health == 0) && (ent2.health > 0 || ent2.max_health == 0)) {
             inflict_damage(sim, ent1.id, ent2.id, ent1.damage, DamageType::kContact);
             inflict_damage(sim, ent2.id, ent1.id, ent2.damage, DamageType::kContact);
         }
-        if (ent1.health == 0) sim->request_delete(ent1.id);
-        if (ent2.health == 0) sim->request_delete(ent2.id);
+        if (ent1.health == 0 && ent1.max_health > 0) sim->request_delete(ent1.id);
+        if (ent2.health == 0 && ent2.max_health > 0) sim->request_delete(ent2.id);
     }
 
     if (ent1.has_component(kDrop) && ent2.has_component(kFlower)) 

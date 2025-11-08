@@ -42,7 +42,7 @@ static Entity &__alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, E
     mob.set_y(y);
     mob.friction = DEFAULT_FRICTION;
     mob.mass = (1 + mob.get_radius() / BASE_FLOWER_RADIUS) * (data.attributes.stationary ? 10000 : 1);
-    if (mob_id == MobID::kAntHole)
+    if (data.attributes.hole)
         BitMath::set(mob.flags, EntityFlags::kNoFriendlyCollision);
     if (team == NULL_ENTITY)
         BitMath::set(mob.flags, EntityFlags::kHasCulling);
@@ -100,7 +100,7 @@ Entity &alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, EntityID c
         for (uint32_t i = 1; i < count; ++i) {
             Entity &seg = __alloc_mob(sim, mob_id, x, y, team);
             seg.add_component(kSegmented);
-            seg.seg_head = curr->id;
+            seg.set_seg_head(curr->id);
             seg.set_angle(curr->get_angle() + frand() * 0.1 - 0.05);
             seg.set_x(curr->get_x() - (curr->get_radius() + seg.get_radius()) * cosf(seg.get_angle()));
             seg.set_y(curr->get_y() - (curr->get_radius() + seg.get_radius()) * sinf(seg.get_angle()));
@@ -231,7 +231,7 @@ Entity &alloc_camera(Simulation *sim, EntityID const team) {
     ent.set_respawn_level(1);
     for (uint32_t i = 0; i < loadout_slots_at_level(ent.get_respawn_level()); ++i)
         ent.set_inventory(i, PetalID::kBasic);
-    if (frand() < 0.001 && PetalTracker::get_count(sim, PetalID::kUniqueBasic) == 0)
+    if (frand() < 0.0001 && PetalTracker::get_count(sim, PetalID::kUniqueBasic) == 0)
         ent.set_inventory(0, PetalID::kUniqueBasic);
     for (uint32_t i = 0; i < 2 * MAX_SLOT_COUNT; ++i)
         PetalTracker::add_petal(sim, ent.get_inventory(i));
@@ -258,7 +258,7 @@ Entity &alloc_cpu_camera(Simulation *sim, EntityID const team) {
     for (uint32_t i = 0; i < loadout_slots_at_level(ent.get_respawn_level()); ++i)
         ent.set_inventory(i, inventory[i]);
     
-    if (frand() < 0.001 && PetalTracker::get_count(sim, PetalID::kUniqueBasic) == 0)
+    if (frand() < 0.0001 && PetalTracker::get_count(sim, PetalID::kUniqueBasic) == 0)
         ent.set_inventory(0, PetalID::kUniqueBasic);
     for (uint32_t i = 0; i < 2 * MAX_SLOT_COUNT; ++i)
         PetalTracker::add_petal(sim, ent.get_inventory(i));

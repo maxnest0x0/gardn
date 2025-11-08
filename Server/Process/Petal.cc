@@ -79,12 +79,12 @@ void tick_petal_behavior(Simulation *sim, Entity &petal) {
     }
     if (petal_data.attributes.burst_heal > 0) {
         EntityID potential = NULL_ENTITY;
-        if (player.health < player.max_health &&
+        if (player.health < player.max_health / 2 &&
             player.dandy_ticks == 0 &&
             !BitMath::at(player.flags, EntityFlags::kZombie))
             potential = player.id;
         else
-            potential = find_teammate_to_heal(sim, player, 150);
+            potential = find_teammate_to_heal(sim, petal, 200);
         if (potential != NULL_ENTITY) {
             Entity &ent = sim->get_ent(potential);
             Vector delta(ent.get_x() - petal.get_x(), ent.get_y() - petal.get_y());
@@ -179,6 +179,30 @@ void tick_petal_behavior(Simulation *sim, Entity &petal) {
                 petal.acceleration.unit_normal(delta.angle() + M_PI / 3).set_magnitude(3 * PLAYER_ACCELERATION);
                 entity_set_despawn_tick(petal, 10 * TPS);
             }
+            break;
+        }
+        case PetalID::kOldLightning: {
+            EntityID target = find_nearest_enemy_to_strike(sim, petal, petal, LIGHTNING_STRIKE_RADIUS, [](Entity const &){ return true; });
+            if (target == NULL_ENTITY) break;
+            inflict_lightning(sim, petal, sim->get_ent(target), petal.damage, PETAL_DATA[petal.get_petal_id()].attributes.bounces);
+            sim->request_delete(petal.id);
+            break;
+        }
+        case PetalID::kUranium: {
+            std::vector<EntityID> targets = find_enemies_to_radiate(sim, petal, URANIUM_RADIATION_RADIUS);
+            inflict_damage(sim, petal.id, petal.get_parent(), 2 * petal.damage, DamageType::kUranium);
+            for (EntityID target : targets)
+                inflict_damage(sim, petal.id, target, petal.damage, DamageType::kUranium);
+            petal.secondary_reload = 0;
+            Entity &anim = sim->alloc_ent();
+            anim.add_component(kPhysics);
+            anim.set_x(petal.get_x());
+            anim.set_y(petal.get_y());
+            anim.set_radius(URANIUM_RADIATION_RADIUS);
+            anim.add_component(kAnimation);
+            anim.set_anim_type(AnimationType::kUranium);
+            sim->spatial_hash.insert(anim);
+            sim->request_delete(anim.id);
             break;
         }
         default:

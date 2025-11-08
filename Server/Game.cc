@@ -25,6 +25,10 @@ static void _update_client(Simulation *sim, Client *client) {
     Entity &team = sim->get_ent(camera.get_team());
     in_view.insert(team.minimap_dots.begin(), team.minimap_dots.end());
     #endif
+    for (EntityID dot_id : sim->arena_info.leader_dots) {
+        if (sim->get_ent(dot_id).get_team() != camera.get_team())
+            in_view.insert(dot_id);
+    }
     Writer writer(Server::OUTGOING_PACKET);
     writer.write<uint8_t>(Clientbound::kClientUpdate);
     writer.write<uint8_t>(Server::is_draining);
@@ -32,6 +36,10 @@ static void _update_client(Simulation *sim, Client *client) {
     sim->spatial_hash.query(camera.get_camera_x(), camera.get_camera_y(), 
     960 / camera.get_fov() + 50, 540 / camera.get_fov() + 50, [&](Simulation *, Entity &ent){
         in_view.insert(ent.id);
+        if (ent.has_component(kSegmented) && ent.has_component(kAnimation)) {
+            if (sim->ent_exists(ent.get_seg_head())) in_view.insert(ent.get_seg_head());
+            if (sim->ent_exists(ent.get_seg_tail())) in_view.insert(ent.get_seg_tail());
+        }
     });
 
     for (EntityID const &i: client->in_view) {

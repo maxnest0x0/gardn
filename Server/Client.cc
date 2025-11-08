@@ -1,5 +1,6 @@
 #include <Server/Client.hh>
 
+#include <Server/EntityFunctions.hh>
 #include <Server/Game.hh>
 #include <Server/PetalTracker.hh>
 #include <Server/Server.hh>
@@ -13,12 +14,11 @@
 #include <array>
 #include <iostream>
 
-constexpr std::array<uint32_t, RarityID::kNumRarities> RARITY_TO_XP = { 2, 10, 50, 200, 1000, 5000, 0 };
-
 Client::Client() : game(nullptr) {}
 
 void Client::init(uint64_t recovery_id) {
     DEBUG_ONLY(assert(game == nullptr);)
+    DEBUG_ONLY(recovery_id = 0;)
     Server::game.add_client(this, recovery_id);
 }
 
@@ -85,6 +85,7 @@ void Client::on_message(WebSocket *ws, std::string_view message, uint64_t code) 
             if (client->check_invalid(
                 validator.validate_float() &&
                 validator.validate_float() &&
+                validator.validate_uint8() &&
                 validator.validate_uint8()
             )) return;
             float x = reader.read<float>();
@@ -99,6 +100,7 @@ void Client::on_message(WebSocket *ws, std::string_view message, uint64_t code) 
                 player.acceleration = accel;
             }
             player.input = reader.read<uint8_t>();
+            player.settings = reader.read<uint8_t>();
             break;
         }
         case Serverbound::kClientSpawn: {
@@ -132,15 +134,7 @@ void Client::on_message(WebSocket *ws, std::string_view message, uint64_t code) 
             uint8_t pos = reader.read<uint8_t>();
             if (pos >= MAX_SLOT_COUNT + player.get_loadout_count()) break;
             PetalID::T old_id = player.get_loadout_ids(pos);
-            if (old_id != PetalID::kNone && old_id != PetalID::kBasic) {
-                uint8_t rarity = PETAL_DATA[old_id].rarity;
-                player.set_score(player.get_score() + RARITY_TO_XP[rarity]);
-                //need to delete if over cap
-                if (player.deleted_petals.size() == player.deleted_petals.capacity())
-                    //removes old trashed old petal
-                    PetalTracker::remove_petal(simulation, player.deleted_petals[0]);
-                player.deleted_petals.push_back(old_id);
-            }
+            delete_petal(simulation, player, old_id);
             player.set_loadout_ids(pos, PetalID::kNone);
             break;
         }

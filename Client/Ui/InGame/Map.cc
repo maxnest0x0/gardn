@@ -26,6 +26,22 @@ void Minimap::on_render(Renderer &ctx) {
     if (!Game::simulation.ent_exists(Game::camera_id)) return;
     Entity const &camera = Game::simulation.get_ent(Game::camera_id);
     Game::simulation.for_each<kDot>([&](Simulation *sim, Entity const &ent){
+        if (ent.get_color() == ColorID::kGray) return;
+        if (ent.get_parent() == camera.get_player()) return;
+        RenderContext c(&ctx);
+        ctx.translate(ent.get_x(), ent.get_y());
+        ctx.set_global_alpha(1 - ent.deletion_animation);
+        ctx.scale(1 + 0.5 * ent.deletion_animation);
+        ctx.set_fill(FLOWER_COLORS[ent.get_color()]);
+        ctx.set_stroke(Renderer::HSV(FLOWER_COLORS[ent.get_color()], 0.8));
+        ctx.set_line_width(ARENA_WIDTH / 120);
+        ctx.begin_path();
+        ctx.arc(0, 0, ARENA_WIDTH / 40);
+        ctx.fill();
+        ctx.stroke();
+    });
+    Game::simulation.for_each<kDot>([&](Simulation *sim, Entity const &ent){
+        if (ent.get_color() != ColorID::kGray) return;
         if (ent.get_parent() == camera.get_player()) return;
         RenderContext c(&ctx);
         ctx.translate(ent.get_x(), ent.get_y());

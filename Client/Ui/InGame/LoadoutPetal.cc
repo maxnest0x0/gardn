@@ -9,6 +9,7 @@
 using namespace Ui;
 
 UiLoadoutPetal *Ui::UiLoadout::petal_slots[2 * MAX_SLOT_COUNT] = {nullptr};
+std::map<EntityID, UiLoadoutDrop *> Ui::UiLoadout::deleted_drops;
 uint8_t Ui::UiLoadout::selected_with_keys = MAX_SLOT_COUNT;
 double Ui::UiLoadout::last_key_select = 0;
 uint32_t Ui::UiLoadout::num_petals_selected = 0;
@@ -174,24 +175,24 @@ UiLoadoutPetal::UiLoadoutPetal(uint8_t pos) : Element(60, 60),
             }
             //if (released)
                 //Ui::UiLoadout::petal_selected = nullptr;
-        } else if (Ui::UiLoadout::selected_with_keys + Game::loadout_count == static_pos && Game::alive()) {
-            if (!showed) lerp_amt = 1;
-            x = lerp(x, (parent_slot->screen_x - Ui::window_width / 2) / Ui::scale, lerp_amt);
-            y = lerp(y, (parent_slot->screen_y - Ui::window_height / 2) / Ui::scale, lerp_amt);
-            width = lerp(width, parent_slot->width + 20, lerp_amt);
-            height = lerp(height, parent_slot->height + 20, lerp_amt);
-            ctx.rotate(sin(Game::timestamp / 150) * 0.1);
         } else {
-            style.layer = 0;
+            if (curr_pos == 2 * MAX_SLOT_COUNT) style.layer = 1;
+            else style.layer = 0;
             if (!showed) lerp_amt = 1;
             x = lerp(x, (parent_slot->screen_x - Ui::window_width / 2) / Ui::scale, lerp_amt);
             y = lerp(y, (parent_slot->screen_y - Ui::window_height / 2) / Ui::scale, lerp_amt);
-            width = lerp(width, parent_slot->width, lerp_amt);
-            height = lerp(height, parent_slot->height, lerp_amt);
+            if (Ui::UiLoadout::selected_with_keys + Game::loadout_count == static_pos && Game::alive()) {
+                width = lerp(width, parent_slot->width + 20, lerp_amt);
+                height = lerp(height, parent_slot->height + 20, lerp_amt);
+                ctx.rotate(sin(Game::timestamp / 150) * 0.1);
+            } else {
+                width = lerp(width, parent_slot->width, lerp_amt);
+                height = lerp(height, parent_slot->height, lerp_amt);
+            }
         }
         //if (!Game::alive())
             //Ui::UiLoadout::petal_selected = nullptr;
-        ctx.scale((float) animation);
+        ctx.scale(std::min(animation * 10, 1.0f));
         if (released && selected) {
             --Ui::UiLoadout::num_petals_selected;
             selected = 0;
@@ -234,4 +235,19 @@ void UiLoadoutPetal::on_event(uint8_t event) {
         tooltip = Ui::UiLoadout::petal_tooltips[last_id];
     } else 
         rendering_tooltip = 0;
+}
+
+UiLoadoutDrop::UiLoadoutDrop(PetalID::T id) : Element(50, 50), petal_id(id) {
+    style.should_render = [&](){ return !showed; };
+    style.animate = [&](Element *elt, Renderer &ctx){
+        UiLoadoutSlot *parent_slot = Ui::UiLoadout::petal_backgrounds[2 * MAX_SLOT_COUNT];
+        x = lerp(x, (parent_slot->screen_x - Ui::window_width / 2) / Ui::scale, Ui::lerp_amount * 0.75);
+        y = lerp(y, (parent_slot->screen_y - Ui::window_height / 2) / Ui::scale, Ui::lerp_amount * 0.75);
+        ctx.scale(std::min(animation * 10, 1.0f));
+    };
+}
+
+void UiLoadoutDrop::on_render(Renderer &ctx) {
+    ctx.scale(width / 60);
+    draw_loadout_background(ctx, petal_id);
 }

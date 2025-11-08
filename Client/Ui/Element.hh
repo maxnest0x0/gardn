@@ -73,7 +73,9 @@ namespace Ui {
         uint8_t focused : 1 = 0;
 
         Element(float = 0, float = 0, Style = {});
+        ~Element();
         void add_child(Element *);
+        void remove_child(Element *);
         void render(Renderer &);
         virtual void on_render(Renderer &);
         virtual void on_render_tooltip(Renderer &);

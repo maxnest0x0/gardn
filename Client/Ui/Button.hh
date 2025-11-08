@@ -16,7 +16,7 @@ namespace Ui {
 
     class ShakeButton : public Button {
         bool (*should_shake)();
-        bool is_shaking;
+        bool is_shaking = false;
     public:
         ShakeButton(float, float, Element *, void (Element *, uint8_t) = [](Element *, uint8_t){}, bool (void) = nullptr, bool (void) = nullptr, Style = { .fill = 0xffffffff, .stroke_hsv = 0.8 });
 

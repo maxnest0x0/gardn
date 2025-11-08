@@ -50,6 +50,7 @@ namespace Game {
     uint8_t simulation_ready = 0;
     uint8_t on_game_screen = 0;
     uint8_t show_debug = 0;
+    uint8_t auto_delete = 0;
 
     uint8_t show_chat = 0;
     std::string chat_text;
@@ -70,7 +71,7 @@ void Game::init() {
     reset();
     title_ui_window.add_child(
         [](){ 
-            Ui::Element *elt = new Ui::StaticText(60, "the gardn project");
+            Ui::Element *elt = new Ui::StaticText(60, "rysteria.pro/gardn");
             elt->x = 0;
             elt->y = -270;
             if (Input::is_mobile) {
@@ -149,7 +150,7 @@ void Game::init() {
     );
     game_ui_window.add_child(
         new Ui::HContainer({
-            new Ui::StaticText(20, "the gardn project")
+            new Ui::StaticText(20, "rysteria.pro/gardn")
         }, 20, 0, { .h_justify = Ui::Style::Left, .v_justify = Ui::Style::Top })
     );
     Ui::make_petal_tooltips();
@@ -382,6 +383,13 @@ void Game::tick(double time) {
     }
 
     //clearing operations
+    std::erase_if(Ui::UiLoadout::deleted_drops, [](auto &iter){
+        if (!iter.second->visible) {
+            delete iter.second;
+            return true;
+        }
+        return false;
+    });
     simulation.post_tick();
     Storage::set();
     Input::reset();

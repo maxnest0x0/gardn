@@ -1,8 +1,10 @@
 #pragma once
 
+#include <Shared/EntityDef.hh>
 #include <Shared/StaticData.hh>
 
 #include <string>
+#include <vector>
 #include <cstdint>
 
 SERVER_ONLY(class Writer;)
@@ -49,6 +51,9 @@ public:
     FIELDS_Arena
     #undef SINGLE
     #undef MULTIPLE
+
+    EntityID leader_dot;
+    std::vector<EntityID> leader_dots;
 #else
     void read(Reader *, uint8_t);
 #endif

@@ -979,6 +979,40 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
             ctx.fill();
             break;
         }
+        case PetalID::kLightning:
+        case PetalID::kOldLightning: {
+            ctx.set_fill(0xff29f2e5);
+            ctx.set_stroke(0xff21c4b9);
+            ctx.set_line_width(1);
+            ctx.begin_path();
+            ctx.move_to(r / 2, 0);
+            for (uint32_t i = 1; i <= 20; ++i) {
+                float radius = i % 2 ? r : r / 2;
+                float angle = i * M_PI / 10;
+                ctx.line_to(radius * cosf(angle), radius * sinf(angle));
+            }
+            ctx.fill();
+            ctx.stroke();
+            break;
+        }
+        case PetalID::kUranium:
+            if (BitMath::at(attrs.flags, PetalRenderFlags::kAnimated))
+                ctx.scale(1.0 + 0.1 * sinf(attrs.animation * 0.01));
+            ctx.set_fill(0xff63bf2e);
+            ctx.set_stroke(0xff509b25);
+            ctx.set_line_width(3);
+            ctx.begin_path();
+            ctx.move_to(-7, -5);
+            ctx.line_to(-1, -9);
+            ctx.line_to(7, -6);
+            ctx.line_to(9, 3);
+            ctx.line_to(2, 9);
+            ctx.line_to(-5, 6);
+            ctx.line_to(-8, 2);
+            ctx.line_to(-7, -5);
+            ctx.fill();
+            ctx.stroke();
+            break;
         default:
             assert(id < PetalID::kNumPetals);
             assert(!"didn't cover petal render");

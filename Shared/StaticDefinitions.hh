@@ -15,12 +15,16 @@ inline uint32_t const MAX_PETALS_IN_CLUMP = 4;
 inline uint32_t const MAX_DIFFICULTY = 3;
 inline uint32_t const MAX_DROPS_PER_MOB = 6;
 inline uint32_t const CHAT_SIZE = 5;
+inline uint32_t const FIRE_ANT_COUNT = 25;
+inline uint32_t const MAX_LIGHTNING_BOUNCES = 15;
 
 namespace DamageType {
     enum : uint8_t {
         kContact,
         kPoison,
-        kReflect
+        kReflect,
+        kLightning,
+        kUranium
     };
 }
 
@@ -81,6 +85,9 @@ namespace PetalID {
         kHornetEgg,
         kMassiveBeetleEgg,
         kGoldenLeaf,
+        kLightning,
+        kOldLightning,
+        kUranium,
         kNumPetals
     };
 };
@@ -112,6 +119,8 @@ namespace MobID {
         kShinyLadybug,
         kSquare,
         kDigger,
+        kFireAnt,
+        kAntBurrow,
         kNumMobs
     };
 };
@@ -145,6 +154,13 @@ namespace AIState {
         kIdleMoving,
         kReturning,
         kBasicAggro
+    };
+};
+
+namespace AnimationType {
+    enum {
+        kLightning,
+        kUranium
     };
 };
 
@@ -198,6 +214,12 @@ namespace PetalFlags {
     };
 };
 
+namespace SettingFlags {
+    enum {
+        kAutoDelete
+    };
+};
+
 struct PoisonDamage {
     float damage;
     float time;
@@ -234,6 +256,7 @@ struct PetalAttributes {
     uint8_t spawns = MobID::kNumMobs;
     uint8_t spawn_count = 0;
     uint8_t equipment = EquipmentFlags::kNone;
+    uint8_t bounces = 0;
 };
 
 struct PetalData {
@@ -252,6 +275,7 @@ struct MobAttributes {
     float aggro_radius = 500;
     uint8_t segments = 1;
     uint8_t stationary;
+    uint8_t hole;
     struct PoisonDamage poison_damage;
 };
 

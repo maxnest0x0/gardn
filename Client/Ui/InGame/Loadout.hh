@@ -5,6 +5,10 @@
 
 #include <Client/StaticData.hh>
 
+#include <map>
+
+class EntityID;
+
 namespace Ui {
     class UiLoadoutSlot : public Element {
     public:
@@ -39,7 +43,7 @@ namespace Ui {
         uint8_t static_pos;
         uint8_t curr_pos;
         uint8_t no_change_ticks;
-        uint8_t selected;
+        uint8_t selected = 0;
         PetalID::T petal_id;
         PetalID::T last_id;
         UiLoadoutPetal(uint8_t);
@@ -49,9 +53,18 @@ namespace Ui {
         virtual void on_event(uint8_t) override;
     };
 
+    class UiLoadoutDrop final : public Element {
+    public:
+        PetalID::T petal_id;
+        UiLoadoutDrop(PetalID::T);
+
+        virtual void on_render(Renderer &) override;
+    };
+
     namespace UiLoadout {
         extern UiLoadoutPetal *petal_slots[2 * MAX_SLOT_COUNT];
         extern UiLoadoutSlot *petal_backgrounds[2 * MAX_SLOT_COUNT + 1];
+        extern std::map<EntityID, UiLoadoutDrop *> deleted_drops;
         extern Element *petal_tooltips[PetalID::kNumPetals];
         extern uint8_t selected_with_keys;
         extern double last_key_select;

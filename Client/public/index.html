@@ -52,6 +52,7 @@
         var Module = {};
         Module.locateFile = (file, prefix) => prefix + file + '?v=' + v;
         window.onerror = window.onunhandledrejection = () => {
+            if (versionHash === '0') return;
             delete window.localStorage['version_hash'];
             window.location.reload();
         };

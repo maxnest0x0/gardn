@@ -41,6 +41,7 @@ namespace Game {
     extern uint8_t simulation_ready;
     extern uint8_t on_game_screen;
     extern uint8_t show_debug;
+    extern uint8_t auto_delete;
 
     extern uint8_t show_chat;
     extern std::string chat_text;
