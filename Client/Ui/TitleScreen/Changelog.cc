@@ -33,6 +33,17 @@ static Element *make_entries(std::initializer_list<std::string const> contents) 
 
 static Element *make_changelog_contents() {
     Element *elt = new Ui::VContainer({
+        make_date("November 8th 2025"),
+        make_entries({
+            "Added 3 new petals",
+            "Added 2 new mobs",
+            "Added leader curses at levels 75 and 90",
+            "Added auto-delete drops setting",
+            "Buffed drop rate by 2x",
+            "Buffed mob density",
+            "Other balancing"
+        }),
+        make_divider(),
         make_date("October 25th 2025"),
         make_entries({
             "Added 1 new petal",
