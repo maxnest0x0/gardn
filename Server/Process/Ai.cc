@@ -458,7 +458,8 @@ void tick_ai_behavior(Simulation *sim, Entity &ent) {
         case MobID::kAntBurrow:
             if (!ent.activated) break;
             if (ent.pending_spawn_count > 0) {
-                Entity &child = alloc_mob(sim, MobID::kFireAnt, ent.get_x(), ent.get_y(), ent.get_team());
+                Vector rand = Vector::rand(frand() * ent.get_radius());
+                Entity &child = alloc_mob(sim, MobID::kFireAnt, ent.get_x() + rand.x, ent.get_y() + rand.y, ent.get_team());
                 child.target = ent.target;
                 --ent.pending_spawn_count;
             } else sim->request_delete(ent.id);

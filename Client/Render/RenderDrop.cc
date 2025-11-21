@@ -12,7 +12,7 @@
 #include <cmath>
 
 void render_drop(Renderer &ctx, Entity const &ent) {
-    if (ent.get_picked_up_by() != NULL_ENTITY && ent.get_picked_up_by() == Game::player_id) {
+    if (ent.get_deleted_by() != NULL_ENTITY && ent.get_deleted_by() == Game::player_id) {
         if (!Ui::UiLoadout::deleted_drops.contains(ent.id)) {
             Ui::UiLoadoutDrop *elt = new Ui::UiLoadoutDrop(ent.get_drop_id());
             Ui::UiLoadout::deleted_drops[ent.id] = elt;

@@ -29,7 +29,7 @@ Entity &alloc_drop(Simulation *sim, PetalID::T drop_id) {
     return drop;
 }
 
-static Entity &__alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, EntityID const team = NULL_ENTITY) {
+static Entity &__alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, EntityID const team = NULL_ENTITY, game_tick_t immunity = 0) {
     DEBUG_ONLY(assert(mob_id < MobID::kNumMobs);)
     struct MobData const &data = MOB_DATA[mob_id];
     float seed = frand();
@@ -58,6 +58,7 @@ static Entity &__alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, E
     mob.damage = data.damage;
     mob.poison_damage = data.attributes.poison_damage;
     mob.set_health_ratio(1);
+    mob.immunity_ticks = immunity;
 
     mob.detection_radius = data.attributes.aggro_radius;
     mob.score_reward = data.xp;
@@ -74,10 +75,10 @@ static Entity &__alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, E
     return mob;
 }
 
-Entity &alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, EntityID const team) {
+Entity &alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, EntityID const team, game_tick_t immunity) {
     struct MobData const &data = MOB_DATA[mob_id];
     if (data.attributes.segments <= 1) {
-        Entity &ent = __alloc_mob(sim, mob_id, x, y, team);
+        Entity &ent = __alloc_mob(sim, mob_id, x, y, team, immunity);
         if (mob_id == MobID::kAntHole) {
             std::vector<MobID::T> const spawns = { 
                 MobID::kBabyAnt, MobID::kBabyAnt, MobID::kBabyAnt, 
@@ -85,20 +86,20 @@ Entity &alloc_mob(Simulation *sim, MobID::T mob_id, float x, float y, EntityID c
             };
             for (MobID::T mob_id : spawns) {
                 Vector rand = Vector::rand(ent.get_radius() * 2);
-                Entity &ant = __alloc_mob(sim, mob_id, x + rand.x, y + rand.y, team);
+                Entity &ant = __alloc_mob(sim, mob_id, x + rand.x, y + rand.y, team, immunity);
                 ant.set_parent(ent.id);
             }
         }
         return ent;
     }
     else {
-        Entity &head = __alloc_mob(sim, mob_id, x, y, team);
+        Entity &head = __alloc_mob(sim, mob_id, x, y, team, immunity);
         //head.add_component(kSegmented);
         Entity *curr = &head;
         uint32_t count = data.attributes.segments;
         if (frand() < 0.001) count *= 5;
         for (uint32_t i = 1; i < count; ++i) {
-            Entity &seg = __alloc_mob(sim, mob_id, x, y, team);
+            Entity &seg = __alloc_mob(sim, mob_id, x, y, team, immunity);
             seg.add_component(kSegmented);
             seg.set_seg_head(curr->id);
             seg.set_angle(curr->get_angle() + frand() * 0.1 - 0.05);

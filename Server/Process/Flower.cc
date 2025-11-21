@@ -182,6 +182,7 @@ void tick_player_behavior(Simulation *sim, Entity &player) {
                         mob.set_parent(player.id);
                         mob.set_color(player.get_color());
                         mob.base_entity = player.id;
+                        mob.score_reward = 0;
                         BitMath::set(mob.flags, EntityFlags::kDieOnParentDeath);
                         BitMath::set(mob.flags, EntityFlags::kNoDrops);
                         if (petal_data.attributes.spawn_count == 0) {

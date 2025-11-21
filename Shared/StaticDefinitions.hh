@@ -15,7 +15,7 @@ inline uint32_t const MAX_PETALS_IN_CLUMP = 4;
 inline uint32_t const MAX_DIFFICULTY = 3;
 inline uint32_t const MAX_DROPS_PER_MOB = 6;
 inline uint32_t const CHAT_SIZE = 5;
-inline uint32_t const FIRE_ANT_COUNT = 25;
+inline uint32_t const FIRE_ANT_COUNT = 20;
 inline uint32_t const MAX_LIGHTNING_BOUNCES = 15;
 
 namespace DamageType {

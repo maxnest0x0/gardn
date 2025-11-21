@@ -34,9 +34,9 @@ static void _pickup_drop(Simulation *sim, Entity &player, Entity &drop) {
     if (!BitMath::at(player.settings, SettingFlags::kAutoDelete)) return;
     uint32_t power = Map::difficulty_at_level(score_to_level(player.get_score()));
     uint8_t rarity = PETAL_DATA[drop.get_drop_id()].rarity;
-    if (rarity < power) {
+    if (rarity < power || (rarity == power && score_to_level(player.get_score()) == MAX_LEVEL)) {
         delete_petal(sim, player, drop.get_drop_id());
-        drop.set_picked_up_by(player.id);
+        drop.set_deleted_by(player.id);
         drop.set_x(player.get_x());
         drop.set_y(player.get_y());
         BitMath::unset(drop.flags, EntityFlags::kIsDespawning);

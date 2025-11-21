@@ -87,7 +87,7 @@ SINGLE(Mob, mob_id, MobID::T)
 
 #define FIELDS_Drop \
 SINGLE(Drop, drop_id, PetalID::T) \
-SINGLE(Drop, picked_up_by, EntityID)
+SINGLE(Drop, deleted_by, EntityID)
 
 #define FIELDS_Segmented \
 SINGLE(Segmented, seg_head, EntityID) \

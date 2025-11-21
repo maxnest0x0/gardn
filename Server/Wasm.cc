@@ -64,7 +64,7 @@ extern "C" {
             if (loadout_ids[i] >= PetalID::kNumPetals) return false;
 
         player.set_score(score);
-        player.immunity_ticks = TPS;
+        player.immunity_ticks = 3 * TPS;
         uint32_t difficulty = MAP_DATA[Map::get_zone_from_pos(player.get_x(), player.get_y())].difficulty;
         uint32_t power = Map::difficulty_at_level(score_to_level(score));
         if (difficulty < power) {
