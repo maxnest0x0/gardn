@@ -2,23 +2,24 @@
 
 set -eux
 
-DEBUG=${DEBUG:-0}
-WASM_SERVER=${WASM_SERVER:-1}
-TDM=${TDM:-1}
-GENERAL_SPATIAL_HASH=1
-USE_CODEPOINT_LEN=${USE_CODEPOINT_LEN:-1}
-WS_URL=${WS_URL:-'wss://rysteria.pro/gardn/'}
-VERSION_HASH=${VERSION_HASH:-$(date +%s)}
-SERVER_PORT=${SERVER_PORT:-$(python3 -c 'import socket; s = socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')}
-
-PULL=${PULL:-1}
+TDM=${TDM:-0}
 JOBS=${JOBS:-1}
-PID_FILE='gardn-server.pid'
-NGINX_FILE="nginx/$VERSION_HASH.conf"
+PULL=${PULL:-1}
 
 if [[ "$PULL" -eq 1 ]]; then
     git pull --ff-only
+    PULL=0 exec ./deploy.sh
 fi
+
+DEBUG=0
+WASM_SERVER=1
+GENERAL_SPATIAL_HASH=1
+USE_CODEPOINT_LEN=1
+WS_URL='wss://rysteria.pro/gardn/'
+VERSION_HASH=$(date +%s)
+SERVER_PORT=$(python3 -c 'import socket; s = socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')
+PID_FILE='gardn-server.pid'
+NGINX_FILE="nginx/$VERSION_HASH.conf"
 
 cmake -S Client -B Client/build \
     "-DDEBUG=$DEBUG" \
@@ -60,6 +61,11 @@ if [[ -f "$PID_FILE" ]]; then
     kill -s SIGUSR2 "$(cat "$PID_FILE")" || true
 fi
 echo $! > "$PID_FILE"
+
+if [[ "$WASM_SERVER" -eq 1 ]]; then
+    sleep 1
+    kill -s SIGUSR1 $!
+fi
 
 (
     tail --pid $! -f /dev/null
