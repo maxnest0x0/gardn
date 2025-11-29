@@ -20,6 +20,7 @@ inline uint32_t const MAX_LIGHTNING_BOUNCES = 15;
 
 namespace DamageType {
     enum : uint8_t {
+        kPassive,
         kContact,
         kPoison,
         kReflect,

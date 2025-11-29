@@ -1,6 +1,7 @@
 #include <Server/EntityFunctions.hh>
 
 #include <Server/PetalTracker.hh>
+#include <Server/Server.hh>
 #include <Server/Spawn.hh>
 
 #include <Shared/Entity.hh>
@@ -148,5 +149,14 @@ void entity_on_death(Simulation *sim, Entity const &ent) {
     } else if (ent.has_component(kDrop)) {
         if (BitMath::at(ent.flags, EntityFlags::kIsDespawning))
             PetalTracker::remove_petal(sim, ent.get_drop_id());
+    } else if (ent.has_component(kCamera)) {
+        --Server::player_count;
+        #ifdef GAMEMODE_TDM
+        --sim->get_ent(ent.get_team()).player_count;
+        #endif
+        if (sim->ent_exists(ent.get_player()))
+            sim->request_delete(ent.get_player());
+        for (uint32_t i = 0; i < 2 * MAX_SLOT_COUNT; ++i)
+            PetalTracker::remove_petal(sim, ent.get_inventory(i));
     }
 }

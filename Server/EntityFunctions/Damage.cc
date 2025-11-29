@@ -43,7 +43,7 @@ void inflict_damage(Simulation *sim, EntityID const atk_id, EntityID const def_i
     if (amt <= 0) return;
     //if (amt <= defender.armor) return;
     float old_health = defender.health;
-    defender.set_damaged(1);
+    if (type != DamageType::kPassive) defender.set_damaged(1);
     defender.health = fclamp(defender.health - amt, 0, defender.health);  
     float damage_dealt = old_health - defender.health;
     //ant hole spawns

@@ -36,7 +36,7 @@ extern "C" {
                 Game::disconnect_message = std::format("Disconnected with code {}", len);
             free(reason);
             if (len == CloseReason::kOutdated)
-                DOM::update_client();
+                DOM::update_client(500);
         }
         else if (type == 1) {
             Game::socket.ready = 1;

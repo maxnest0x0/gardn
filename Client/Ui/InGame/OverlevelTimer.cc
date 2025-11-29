@@ -46,6 +46,6 @@ Element *Ui::make_overlevel_indicator() {
             && Game::overlevel_timer > 0;
         }
     });
-    elt->y = -80;
+    elt->y = -220;
     return elt;
 }

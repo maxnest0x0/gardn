@@ -1,5 +1,6 @@
 #include <Server/Process.hh>
 
+#include <Server/EntityFunctions.hh>
 #include <Server/Spawn.hh>
 
 #include <Shared/Simulation.hh>
@@ -22,7 +23,7 @@ void tick_curse_behavior(Simulation *sim) {
     sim->for_each<kCamera>([&](Simulation *sim, Entity &ent) {
         if (!sim->ent_alive(ent.get_player())) return;
         uint32_t score = sim->get_ent(ent.get_player()).get_score();
-        if (score < max_score) return;
+        if (score <= max_score) return;
         max_score = score;
         leader = ent.get_player();
     });
@@ -51,8 +52,8 @@ void tick_curse_behavior(Simulation *sim) {
         }
         if (max_score >= level_to_score(90)) {
             float accel = player.acceleration.magnitude() / PLAYER_ACCELERATION;
-            float dmg = player.max_health / (60 * TPS) * fclamp(accel, 0, 1);
-            player.health = fclamp(player.health - dmg, 0, player.max_health);
+            float dmg = player.health / (30 * TPS) * fclamp(accel, 0, 1);
+            inflict_damage(sim, NULL_ENTITY, player.id, dmg, DamageType::kPassive);
         }
     }
     if (sim->ent_alive(old_leader_dot) && old_leader_dot != leader_dot)

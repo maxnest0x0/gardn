@@ -147,11 +147,10 @@ WebSocketServer::WebSocketServer() {
 
 void Server::init() {
     EM_ASM({
-        const inspector = require("inspector");
         globalThis.Module = Module;
         process.on("SIGUSR2", () => {
             console.log("closing...");
-            inspector.close();
+            require("inspector").close(); // might block
             _sigusr2();
         });
         process.on("exit", () => {

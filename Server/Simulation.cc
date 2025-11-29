@@ -82,14 +82,14 @@ void Simulation::post_tick() {
     });
     for_each_entity([](Simulation *sim, Entity &ent) {
         if (!ent.pending_delete) return;
+        if (ent.deletion_tick == 0)
+            entity_on_death(sim, ent);
         if (!ent.has_component(kPhysics)) 
             return sim->_delete_ent(ent.id);
         if (!ent.has_component(kAnimation) && ent.deletion_tick >= TPS / 5)
             return sim->_delete_ent(ent.id);
         if (ent.deletion_tick >= TPS)
             return sim->_delete_ent(ent.id);
-        if (ent.deletion_tick == 0)
-            entity_on_death(sim, ent);
         ++ent.deletion_tick;
     });
 }

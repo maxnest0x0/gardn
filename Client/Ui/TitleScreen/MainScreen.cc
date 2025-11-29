@@ -200,7 +200,7 @@ Element *Ui::make_panel_buttons() {
         new Ui::ShakeButton(120, 35, 
             new Ui::StaticText(16, "Update"), 
             [](Element *elt, uint8_t e){ if (e == Ui::kClick) {
-                DOM::update_client();
+                DOM::update_client(0);
             } },
             nullptr,
             [](){ return true; },

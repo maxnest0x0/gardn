@@ -18,7 +18,7 @@ void Particle::tick_title(Renderer &ctx, double dt) {
     size_t len = title_particles.size();
     for (size_t i = len; i > 0; --i) {
         TitleParticleEntity &part = title_particles[i - 1];
-        if (part.x > ctx.width + 10 * part.radius) {
+        if (part.x > ctx.width + PETAL_DATA[part.id].radius * part.radius * Ui::scale) {
             part = title_particles[title_particles.size() - 1];
             title_particles.pop_back();
             continue;
@@ -38,7 +38,6 @@ void Particle::tick_title(Renderer &ctx, double dt) {
     for (size_t i = 0; i < 4; ++i) {
         if (frand() > 0.02) continue;
         TitleParticleEntity npart;
-        npart.x = -100;
         std::vector<PetalID::T> ids = {PetalID::kBasic};
         float freq_sum = 1;
         for (PetalID::T pot = PetalID::kBasic + 1; pot < PetalID::kNumPetals; ++pot)
@@ -54,6 +53,7 @@ void Particle::tick_title(Renderer &ctx, double dt) {
             npart.x_velocity = frand() * 100 + 100;
             npart.sin_offset = frand() * M_PI;
             npart.radius = frand() + 0.5;
+            npart.x = -PETAL_DATA[id].radius * npart.radius * Ui::scale;
             title_particles.push_back(std::move(npart));
             break;
         }

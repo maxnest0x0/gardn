@@ -123,6 +123,7 @@ void GameInstance::add_client(Client *client, uint64_t recovery_id) {
     if (camera.client != nullptr)
         camera.client->disconnect(CloseReason::kRecovered, "Session Recovered");
     camera.client = client;
+    BitMath::unset(camera.flags, EntityFlags::kZombie);
     BitMath::unset(camera.flags, EntityFlags::kIsDespawning);
 }
 
@@ -130,13 +131,10 @@ void GameInstance::remove_client(Client *client) {
     DEBUG_ONLY(assert(client->game == this);)
     clients.erase(client);
     if (simulation.ent_exists(client->camera)) {
-        Entity &c = simulation.get_ent(client->camera);
-        #ifdef DEBUG
-        entity_set_despawn_tick(c, 0);
-        #else
-        entity_set_despawn_tick(c, 60 * TPS);
-        #endif
-        c.client = nullptr;
+        Entity &camera = simulation.get_ent(client->camera);
+        DEBUG_ONLY(simulation.request_delete(camera.id);)
+        BitMath::set(camera.flags, EntityFlags::kZombie);
+        camera.client = nullptr;
     }
     client->game = nullptr;
 }

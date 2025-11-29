@@ -123,19 +123,20 @@ void DOM::open_page(char const *url) {
     }, url);
 }
 
-void DOM::update_client() {
+void DOM::update_client(float delay) {
     EM_ASM({
         delete window.localStorage["version_hash"];
         window.onbeforeunload = null;
         setTimeout(() => {
             window.location.reload();
-        }, 500);
-    });
+        }, $0);
+    }, delay);
 }
 
 void DOM::cache_client() {
     EM_ASM({
         window.localStorage["version_hash"] = $0.toString();
+        window.onerror = window.onunhandledrejection = null;
     }, VERSION_HASH);
 }
 
