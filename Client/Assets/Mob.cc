@@ -299,6 +299,7 @@ void draw_static_mob(MobID::T mob_id, Renderer &ctx, MobRenderAttributes attr) {
             ctx.fill();
             break;
         case MobID::kHornet:
+            ctx.scale(radius / 30);
             SET_BASE_COLOR(0xffffd363)
             ctx.set_fill(0xff333333);
             ctx.set_stroke(0xff292929);

@@ -374,12 +374,12 @@ void tick_ai_behavior(Simulation *sim, Entity &ent) {
             if (sim->ent_alive(ent.target)) {
                 Entity const &target = sim->get_ent(ent.target);
                 Vector delta(parent.get_x() - target.get_x(), parent.get_y() - target.get_y());
-                if (delta.magnitude() > SUMMON_RETREAT_RADIUS)
+                if (delta.magnitude() > 1.2 * ent.detection_radius)
                     ent.target = NULL_ENTITY;
             }
             if (!sim->ent_alive(ent.target)) {
                 Vector delta(parent.get_x() - ent.get_x(), parent.get_y() - ent.get_y());
-                if (delta.magnitude() > SUMMON_RETREAT_RADIUS) {
+                if (delta.magnitude() > 1.2 * ent.detection_radius) {
                     ent.target = NULL_ENTITY;
                     ent.ai_state = AIState::kReturning;
                 }
@@ -391,8 +391,14 @@ void tick_ai_behavior(Simulation *sim, Entity &ent) {
         ent.ai_tick = 0;
         return;
     }
-    if (!sim->ent_alive(ent.target) && sim->ent_alive(ent.last_damaged_by))
-        ent.target = ent.last_damaged_by;
+    if (!sim->ent_alive(ent.target) && sim->ent_exists(ent.target)) {
+        Entity &target = sim->get_ent(ent.target);
+        if (sim->ent_alive(target.get_parent())) {
+            Entity &parent = sim->get_ent(target.get_parent());
+            if (parent.has_component(kFlower) || parent.has_component(kMob))
+                ent.target = parent.id;
+        }
+    }
     switch(ent.get_mob_id()) {
         case MobID::kBabyAnt:            
         case MobID::kLadybug:

@@ -34,7 +34,7 @@ static void _update_client(Simulation *sim, Client *client) {
     writer.write<uint8_t>(Server::is_draining);
     writer.write<EntityID>(client->camera);
     sim->spatial_hash.query(camera.get_camera_x(), camera.get_camera_y(), 
-    960 / camera.get_fov() + 50, 540 / camera.get_fov() + 50, [&](Simulation *, Entity &ent){
+    960 / camera.get_fov() + 100, 540 / camera.get_fov() + 100, [&](Simulation *, Entity &ent){
         in_view.insert(ent.id);
         if (ent.has_component(kSegmented) && ent.has_component(kAnimation)) {
             if (sim->ent_exists(ent.get_seg_head())) in_view.insert(ent.get_seg_head());

@@ -177,11 +177,15 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
             ctx.qcurve_to(8,0,0,10);
             ctx.qcurve_to(-8,0,0,-10);
             ctx.fill();
-            ctx.set_fill(0xffeeeeee);
-            ctx.begin_path();
-            uint8_t equipped = BitMath::at(attrs.flags, PetalRenderFlags::kEquipped);
-            ctx.arc(equipped ? attrs.eye_x : 0, equipped ? attrs.eye_y : 0, 5);
-            ctx.fill();
+            {
+                RenderContext context(&ctx);
+                ctx.clip();
+                ctx.set_fill(0xffeeeeee);
+                ctx.begin_path();
+                uint8_t equipped = BitMath::at(attrs.flags, PetalRenderFlags::kEquipped);
+                ctx.arc(equipped ? attrs.eye_x : 0, equipped ? attrs.eye_y : 0, 5);
+                ctx.fill();
+            }
             ctx.set_stroke(0xff111111);
             ctx.set_line_width(1.5);
             ctx.round_line_cap();

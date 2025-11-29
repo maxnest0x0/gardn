@@ -16,7 +16,7 @@ EntityID find_nearest_enemy(Simulation *simulation, Entity const &entity, float 
         if (sim->ent_alive(entity.get_parent())) {
             Entity &parent = sim->get_ent(entity.get_parent());
             float dist = Vector(ent.get_x()-parent.get_x(),ent.get_y()-parent.get_y()).magnitude();
-            if (dist > SUMMON_RETREAT_RADIUS) return;
+            if (dist > 1.2 * entity.detection_radius) return;
         }
         float dist = Vector(ent.get_x()-entity.get_x(),ent.get_y()-entity.get_y()).magnitude();
         if (dist < min_dist) { min_dist = dist; ret = ent.id; }
