@@ -92,12 +92,6 @@ void Simulation::on_tick() {
     for_each_entity([](Simulation *sim, Entity &ent) {
         ent.tick_lerp(Ui::lerp_amount);
     });
-
-    for (uint32_t i = 0; i < std::min(arena_info.player_count, LEADERBOARD_SIZE); ++i)
-        arena_info.scores[i].step(Ui::lerp_amount);
-
-    for (uint32_t i = arena_info.player_count; i < LEADERBOARD_SIZE; ++i)
-        arena_info.scores[i] = 0;
 }
 
 void Simulation::post_tick() {

@@ -26,7 +26,7 @@ void Minimap::on_render(Renderer &ctx) {
     if (!Game::simulation.ent_exists(Game::camera_id)) return;
     Entity const &camera = Game::simulation.get_ent(Game::camera_id);
     Game::simulation.for_each<kDot>([&](Simulation *sim, Entity const &ent){
-        if (ent.get_color() == ColorID::kGray) return;
+        if (ent.get_color() == ColorID::kGreen) return;
         if (ent.get_parent() == camera.get_player()) return;
         RenderContext c(&ctx);
         ctx.translate(ent.get_x(), ent.get_y());
@@ -41,7 +41,7 @@ void Minimap::on_render(Renderer &ctx) {
         ctx.stroke();
     });
     Game::simulation.for_each<kDot>([&](Simulation *sim, Entity const &ent){
-        if (ent.get_color() != ColorID::kGray) return;
+        if (ent.get_color() != ColorID::kGreen) return;
         if (ent.get_parent() == camera.get_player()) return;
         RenderContext c(&ctx);
         ctx.translate(ent.get_x(), ent.get_y());

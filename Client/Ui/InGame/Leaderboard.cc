@@ -15,10 +15,27 @@ static float const LEADERBOARD_WIDTH = 180;
 LeaderboardSlot::LeaderboardSlot(uint8_t p) : Element(LEADERBOARD_WIDTH, 18) , pos(p) {
     ratio.set(1);
     style.animate = [&](Element *, Renderer &){
-        if (pos >= Game::simulation.arena_info.player_count) return;
+        if (pos >= Game::simulation.arena_info.player_count) {
+            score = 0;
+            return;
+        }
+        if (pos == LEADERBOARD_SIZE - 1 && Game::simulation.ent_alive(Game::player_id) &&
+            Game::simulation.get_ent(Game::player_id).get_leaderboard_pos() == LEADERBOARD_SIZE) {
+            score.set(Game::score);
+            color = 0xff999999;
+            name = &Game::simulation.get_ent(Game::player_id).get_name();
+        } else {
+            score.set(Game::simulation.arena_info.scores[pos]);
+            if (Game::simulation.ent_alive(Game::player_id) &&
+                Game::simulation.get_ent(Game::player_id).get_leaderboard_pos() == pos)
+                color = 0xffffe763;
+            else color = FLOWER_COLORS[Game::simulation.arena_info.colors[pos]];
+            name = &Game::simulation.arena_info.names[pos];
+        }
+        score.step(Ui::lerp_amount);
         float r = 1;
-        if (((float) Game::simulation.arena_info.scores[0]) != 0) 
-            r = (float) Game::simulation.arena_info.scores[pos] / (float) Game::simulation.arena_info.scores[0];
+        if (Game::simulation.arena_info.scores[0] != 0) 
+            r = score.anchor() / Game::simulation.arena_info.scores[0];
         ratio.set(r);
         ratio.step(Ui::lerp_amount);
     };
@@ -34,15 +51,13 @@ void LeaderboardSlot::on_render(Renderer &ctx) {
     ctx.move_to(-(width-height)/2,0);
     ctx.line_to((width-height)/2,0);
     ctx.stroke();
-    ctx.set_stroke(FLOWER_COLORS[Game::simulation.arena_info.colors[pos]]);
+    ctx.set_stroke(color);
     ctx.set_line_width(height * 0.8);
     ctx.begin_path();
     ctx.move_to(-(width-height)/2,0);
     ctx.line_to(-(width-height)/2+(width-height)*((float) ratio),0);
     ctx.stroke();
-    std::string format_string = std::format("{} - {}", 
-        name_or_unnamed(Game::simulation.arena_info.names[pos]),
-        format_score((float) Game::simulation.arena_info.scores[pos]));
+    std::string format_string = std::format("{} - {}", name_or_unnamed(*name), format_score((float) score));
     ctx.set_fill(0xffffffff);
     ctx.set_stroke(0xff222222);
     ctx.center_text_align();

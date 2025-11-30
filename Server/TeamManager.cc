@@ -33,7 +33,7 @@ void TeamManager::tick() {
         simulation->get_ent(team_id).minimap_dots.clear();
     simulation->for_each_entity([](Simulation *sim, Entity &ent){
         if (!ent.has_component(kDot)) return;
-        if (ent.get_color() == ColorID::kGray) return;
+        if (ent.get_color() == ColorID::kGreen) return;
         if (sim->ent_alive(ent.get_parent())) {
             Entity &player = sim->get_ent(ent.get_parent());
             ent.set_x(player.get_x());

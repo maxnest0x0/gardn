@@ -145,6 +145,7 @@ namespace ColorID {
         kGray,
         kBlue,
         kRed,
+        kGreen,
         kNumColors
     };
 };

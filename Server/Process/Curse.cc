@@ -42,7 +42,7 @@ void tick_curse_behavior(Simulation *sim) {
                 leader_dot = old_leader_dot;
             else {
                 Entity &dot = alloc_dot(sim, player);
-                dot.set_color(ColorID::kGray);
+                dot.set_color(ColorID::kGreen);
                 leader_dot = dot.id;
                 leader_dots.push_back(dot.id);
             }

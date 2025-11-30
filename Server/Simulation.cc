@@ -13,9 +13,13 @@
 #include <vector>
 
 static void calculate_leaderboard(Simulation *sim) {
-    std::vector<Entity const *> players;
+    std::vector<Entity *> players;
     sim->for_each<kCamera>([&](Simulation *sim, Entity &ent) { 
-        if (sim->ent_alive(ent.get_player())) players.push_back(&sim->get_ent(ent.get_player()));
+        if (sim->ent_alive(ent.get_player())) {
+            Entity &player = sim->get_ent(ent.get_player());
+            player.set_leaderboard_pos(LEADERBOARD_SIZE);
+            players.push_back(&player);
+        }
     });
     std::stable_sort(players.begin(), players.end(), [](Entity const *a, Entity const *b){
         return a->get_score() > b->get_score();
@@ -24,9 +28,14 @@ static void calculate_leaderboard(Simulation *sim) {
     sim->arena_info.set_player_count(num);
     num = std::min(num, LEADERBOARD_SIZE);
     for (uint32_t i = 0; i < num; ++i) {
+        players[i]->set_leaderboard_pos(i);
         sim->arena_info.set_names(i, players[i]->get_name());
         sim->arena_info.set_scores(i, players[i]->get_score());
+        #ifdef GAMEMODE_TDM
         sim->arena_info.set_colors(i, players[i]->get_color());
+        #else
+        sim->arena_info.set_colors(i, ColorID::kGreen);
+        #endif
     }
 }
 

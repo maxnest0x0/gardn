@@ -15,6 +15,9 @@ namespace Ui {
     public:
         uint8_t pos;
         LerpFloat ratio;
+        LerpFloat score;
+        uint32_t color;
+        std::string const *name;
         LeaderboardSlot(uint8_t);
 
         virtual void on_render(Renderer &) override;
