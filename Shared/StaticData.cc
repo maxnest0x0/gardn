@@ -631,10 +631,10 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
     {
         .name = "Yggdrasil",
         .description = "Rumored to be able to bring the fallen back to life",
-        .health = 0.0,
+        .health = 100.0,
         .damage = 1.0,
         .radius = 12.0,
-        .reload = 25.0,
+        .reload = 2.5,
         .count = 1,
         .rarity = RarityID::kMythic,
         .attributes = {
