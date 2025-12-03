@@ -56,7 +56,7 @@ void delete_petal(Simulation *simulation, Entity &player, PetalID::T old_id) {
         //need to delete if over cap
         if (player.deleted_petals.size() == player.deleted_petals.capacity())
             //removes old trashed petal
-            PetalTracker::remove_petal(simulation, player.deleted_petals[0]);
+            PetalTracker::remove_petal(player.deleted_petals[0]);
         player.deleted_petals.push_back(old_id);
     }
 }

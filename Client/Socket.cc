@@ -17,11 +17,11 @@ extern "C" {
     void on_message(uint8_t type, uint32_t len, char *reason) {
         if (type == 0) {
             std::printf("Connected\n");
-            Writer w(INCOMING_PACKET);
+            Writer w(OUTGOING_PACKET);
             w.write<uint8_t>(Serverbound::kVerify);
             w.write<uint64_t>(VERSION_HASH);
             w.write<uint64_t>(Game::recovery_id);
-            Game::reset();
+            w.write<uint8_t>(Game::gamemode);
             Game::socket.ready = 1; //force send
             Game::socket.send(w.packet, w.at - w.packet);
             Game::socket.ready = 0;

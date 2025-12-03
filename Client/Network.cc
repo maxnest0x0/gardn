@@ -13,6 +13,8 @@ void Game::on_message(uint8_t *ptr, uint32_t len) {
     Reader reader(ptr);
     switch(reader.read<uint8_t>()) {
         case Clientbound::kClientUpdate: {
+            uint8_t seen_arena = reader.read<uint8_t>();
+            if (!seen_arena) Game::reset();
             simulation_ready = 1;
             is_outdated = reader.read<uint8_t>();
             camera_id = reader.read<EntityID>();
@@ -33,7 +35,7 @@ void Game::on_message(uint8_t *ptr, uint32_t len) {
                 if (BitMath::at(create, 1)) ent.pending_delete = 1;
                 curr_id = reader.read<EntityID>();
             }
-            simulation.arena_info.read(&reader, reader.read<uint8_t>());
+            simulation.arena_info.read(&reader, !seen_arena);
             break;
         }
         default:
@@ -100,5 +102,13 @@ void Game::send_chat(std::string const &text) {
     if (!Game::alive()) return;
     writer.write<uint8_t>(Serverbound::kChatSend);
     writer.write<std::string>(text);
+    socket.send(writer.packet, writer.at - writer.packet);
+}
+
+void Game::switch_gamemode(uint8_t gamemode) {
+    Writer writer(static_cast<uint8_t *>(OUTGOING_PACKET));
+    if (Game::alive()) return;
+    writer.write<uint8_t>(Serverbound::kGamemodeSwitch);
+    writer.write<uint8_t>(gamemode);
     socket.send(writer.packet, writer.at - writer.packet);
 }

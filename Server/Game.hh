@@ -13,9 +13,10 @@ class GameInstance {
     TeamManager team_manager;
 public:
     Simulation simulation;
-    GameInstance();
+    uint8_t gamemode;
+    GameInstance(uint8_t);
     void init();
     void tick();
-    void add_client(Client *, uint64_t);
+    void add_client(Client *, EntityID);
     void remove_client(Client *);
 };

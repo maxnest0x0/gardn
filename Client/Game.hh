@@ -42,6 +42,7 @@ namespace Game {
     extern uint8_t on_game_screen;
     extern uint8_t show_debug;
     extern uint8_t auto_delete;
+    extern uint8_t gamemode;
 
     extern uint8_t show_chat;
     extern std::string chat_text;
@@ -67,6 +68,7 @@ namespace Game {
     void swap_petals(uint8_t, uint8_t);
     void swap_all_petals();
     void send_chat(std::string const &);
+    void switch_gamemode(uint8_t);
     void on_message(uint8_t *, uint32_t);
     void poll_ui_event(Ui::ScreenEvent const &);
 };

@@ -29,6 +29,14 @@ namespace DamageType {
     };
 }
 
+namespace Gamemode {
+    enum : uint8_t {
+        kFFA,
+        kTDM,
+        kNumGamemodes
+    };
+}
+
 namespace PetalID {
     typedef uint8_t T;
     enum : T {

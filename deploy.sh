@@ -2,10 +2,7 @@
 
 set -eux
 
-TDM=${TDM:-0}
-JOBS=${JOBS:-1}
 PULL=${PULL:-1}
-
 if [[ "$PULL" -eq 1 ]]; then
     git pull --ff-only
     PULL=0 exec ./deploy.sh
@@ -18,6 +15,7 @@ USE_CODEPOINT_LEN=1
 WS_URL='wss://rysteria.pro/gardn/'
 VERSION_HASH=$(date +%s)
 SERVER_PORT=$(python3 -c 'import socket; s = socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')
+JOBS=$(nproc)
 PID_FILE='gardn-server.pid'
 NGINX_FILE="nginx/$VERSION_HASH.conf"
 
@@ -31,7 +29,6 @@ make -C Client/build "-j$JOBS"
 cmake -S Server -B Server/build \
     "-DDEBUG=$DEBUG" \
     "-DWASM_SERVER=$WASM_SERVER" \
-    "-DTDM=$TDM" \
     "-DGENERAL_SPATIAL_HASH=$GENERAL_SPATIAL_HASH" \
     "-DUSE_CODEPOINT_LEN=$USE_CODEPOINT_LEN" \
     "-DVERSION_HASH=$VERSION_HASH" \

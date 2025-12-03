@@ -66,7 +66,7 @@ void Server::init() {
         std::cout << "exiting...\n";
     });
 
-    Server::game.init();
+    for (GameInstance &game : Server::games) game.init();
     Server::run();
 }
 

@@ -17,7 +17,8 @@ enum Serverbound {
     kClientSpawn,
     kPetalSwap,
     kPetalDelete,
-    kChatSend
+    kChatSend,
+    kGamemodeSwitch
 };
 
 enum CloseReason {

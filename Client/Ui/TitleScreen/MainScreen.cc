@@ -41,7 +41,28 @@ Element *Ui::make_title_input_box() {
                             { .fill = 0xff1dd129, .line_width = 5, .round_radius = 3 }
                         )
                     }, 0, 10,{}),
-                    new Ui::StaticText(14, "(or press ENTER to spawn)")
+                    new Ui::HFlexContainer(
+                        new Ui::HContainer({
+                            new Ui::Button(80, 30,
+                                new Ui::StaticText(15, "FFA"),
+                                [](Element *elt, uint8_t e){
+                                    if (e == Ui::kClick) Game::switch_gamemode(Gamemode::kFFA);
+                                },
+                                [](){ return Game::gamemode == Gamemode::kFFA; },
+                                { .fill = 0xffffe763, .line_width = 5, .round_radius = 3 }
+                            ),
+                            new Ui::Button(80, 30,
+                                new Ui::StaticText(15, "TDM"),
+                                [](Element *elt, uint8_t e){
+                                    if (e == Ui::kClick) Game::switch_gamemode(Gamemode::kTDM);
+                                },
+                                [](){ return Game::gamemode == Gamemode::kTDM; },
+                                { .fill = 0xffec6869, .line_width = 5, .round_radius = 3 }
+                            ),
+                        }, 0, 10),
+                        new Ui::StaticText(14, "(or press ENTER to spawn)"),
+                        15, 0
+                    )
                 }, 10, 5, {
                     .animate = [](Element *elt, Renderer &ctx) { 
                         ctx.translate(0, (elt->animation - 1) * ctx.height * 0.6);

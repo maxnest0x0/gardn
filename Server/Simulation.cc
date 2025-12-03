@@ -31,11 +31,10 @@ static void calculate_leaderboard(Simulation *sim) {
         players[i]->set_leaderboard_pos(i);
         sim->arena_info.set_names(i, players[i]->get_name());
         sim->arena_info.set_scores(i, players[i]->get_score());
-        #ifdef GAMEMODE_TDM
-        sim->arena_info.set_colors(i, players[i]->get_color());
-        #else
-        sim->arena_info.set_colors(i, ColorID::kGreen);
-        #endif
+        if (sim->arena_info.gamemode == Gamemode::kTDM)
+            sim->arena_info.set_colors(i, players[i]->get_color());
+        else
+            sim->arena_info.set_colors(i, ColorID::kGreen);
     }
 }
 

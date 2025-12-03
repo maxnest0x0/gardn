@@ -52,8 +52,9 @@ extern "C" {
         Server::is_draining = true;
     }
 
-    bool restore_player(EntityID::hash_type hash, EntityID::id_type id, uint32_t score, PetalID::T *loadout_ids) {
-        Simulation *sim = &Server::game.simulation;
+    bool restore_player(uint8_t gamemode, EntityID::hash_type hash, EntityID::id_type id, uint32_t score, PetalID::T *loadout_ids) {
+        if (gamemode >= Gamemode::kNumGamemodes) return false;
+        Simulation *sim = &Server::games[gamemode].simulation;
         if (id >= ENTITY_CAP) return false;
         EntityID player_id = EntityID(id, hash);
         if (!sim->ent_alive(player_id)) return false;
@@ -72,9 +73,9 @@ extern "C" {
             player.set_x(0.99 * zone.left + 0.01 * zone.right);
         }
         for (uint32_t i = 0; i < loadout_count + MAX_SLOT_COUNT; ++i) {
-            PetalTracker::remove_petal(sim, player.get_loadout_ids(i));
+            PetalTracker::remove_petal(player.get_loadout_ids(i));
             player.set_loadout_ids(i, loadout_ids[i]);
-            PetalTracker::add_petal(sim, loadout_ids[i]);
+            PetalTracker::add_petal(loadout_ids[i]);
         }
         for (uint32_t i = 0; i < loadout_count; ++i) {
             LoadoutSlot &slot = player.loadout[i];
@@ -157,7 +158,8 @@ void Server::init() {
             console.log("exiting...");
         });
     });
-    Server::game.init();
+
+    for (GameInstance &game : Server::games) game.init();
     Server::run();
 }
 

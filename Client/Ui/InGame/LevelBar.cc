@@ -44,8 +44,7 @@ void LevelBar::on_render(Renderer &ctx) {
     std::string text = "Lvl " + std::to_string(level) + " Flower";
     ctx.draw_text(text.c_str(), { .size = 16 });
     ctx.translate(0, -height/2 - 16);
-    if (Game::alive())
-        ctx.draw_text(Game::simulation.get_ent(Game::player_id).get_name().c_str(), { .size = 24 });
+    ctx.draw_text(Game::nickname.c_str(), { .size = 24 });
 }
 
 Element *Ui::make_level_bar() {

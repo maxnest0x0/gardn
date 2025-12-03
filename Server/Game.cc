@@ -21,16 +21,17 @@ static void _update_client(Simulation *sim, Client *client) {
     Entity &camera = sim->get_ent(client->camera);
     if (sim->ent_exists(camera.get_player())) 
         in_view.insert(camera.get_player());
-    #ifdef GAMEMODE_TDM
-    Entity &team = sim->get_ent(camera.get_team());
-    in_view.insert(team.minimap_dots.begin(), team.minimap_dots.end());
-    #endif
+    if (sim->arena_info.gamemode == Gamemode::kTDM) {
+        Entity &team = sim->get_ent(camera.get_team());
+        in_view.insert(team.minimap_dots.begin(), team.minimap_dots.end());
+    }
     for (EntityID dot_id : sim->arena_info.leader_dots) {
         if (sim->get_ent(dot_id).get_team() != camera.get_team())
             in_view.insert(dot_id);
     }
     Writer writer(Server::OUTGOING_PACKET);
     writer.write<uint8_t>(Clientbound::kClientUpdate);
+    writer.write<uint8_t>(client->seen_arena);
     writer.write<uint8_t>(Server::is_draining);
     writer.write<EntityID>(client->camera);
     sim->spatial_hash.query(camera.get_camera_x(), camera.get_camera_y(), 
@@ -65,58 +66,43 @@ static void _update_client(Simulation *sim, Client *client) {
     }
     writer.write<EntityID>(NULL_ENTITY);
     //write arena stuff
-    writer.write<uint8_t>(client->seen_arena);
-    sim->arena_info.write(&writer, client->seen_arena);
+    sim->arena_info.write(&writer, !client->seen_arena);
     client->seen_arena = 1;
     client->send_packet(writer.packet, writer.at - writer.packet);
 }
 
-GameInstance::GameInstance() : simulation(), clients(), team_manager(&simulation) {}
+GameInstance::GameInstance(uint8_t mode) : simulation(), clients(), team_manager(&simulation), gamemode(mode) {}
 
 void GameInstance::init() {
+    simulation.arena_info.set_gamemode(gamemode);
     for (uint32_t i = 0; i < ENTITY_CAP / 2; ++i)
         Map::spawn_random_mob(&simulation, frand() * ARENA_WIDTH, frand() * ARENA_HEIGHT);
-    #ifdef GAMEMODE_TDM
-    team_manager.add_team(ColorID::kBlue);
-    team_manager.add_team(ColorID::kRed);
-    #endif
+    if (gamemode == Gamemode::kTDM) {
+        team_manager.add_team(ColorID::kBlue);
+        team_manager.add_team(ColorID::kRed);
+    }
 }
 
 void GameInstance::tick() {
     simulation.tick();
-    #ifdef GAMEMODE_TDM
-    team_manager.tick();
-    #endif
+    if (gamemode == Gamemode::kTDM)
+        team_manager.tick();
     for (Client *client : clients)
         _update_client(&simulation, client);
     simulation.post_tick();
 }
 
-void GameInstance::add_client(Client *client, uint64_t recovery_id) {
+void GameInstance::add_client(Client *client, EntityID camera_id) {
     DEBUG_ONLY(assert(client->game != this);)
     if (client->game != nullptr)
         client->game->remove_client(client);
     client->game = this;
     clients.insert(client);
-    EntityID camera_id = NULL_ENTITY;
-    simulation.for_each<kCamera>([&](Simulation *sim, Entity &ent){
-        if (ent.get_recovery_id() == recovery_id) {
-            assert(camera_id == NULL_ENTITY);
-            camera_id = ent.id;
-        }
-    });
     if (camera_id == NULL_ENTITY) {
-        if (Server::is_draining) {
-            client->disconnect(CloseReason::kOutdated, "Outdated Version");
-            return;
-        }
         EntityID team;
-        #ifdef GAMEMODE_TDM
-        team = team_manager.get_random_team();
-        #endif
-        Entity &camera = alloc_camera(&simulation, team);
-        camera.set_recovery_id((static_cast<uint64_t>(std::time(0)) << 32) | std::rand());
-        client->camera = camera.id;
+        if (gamemode == Gamemode::kTDM)
+            team = team_manager.get_random_team();
+        client->camera = alloc_camera(&simulation, team).id;
     } else
         client->camera = camera_id;
     Entity &camera = simulation.get_ent(client->camera);

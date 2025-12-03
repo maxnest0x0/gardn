@@ -16,10 +16,40 @@
 
 Client::Client() : game(nullptr) {}
 
-void Client::init(uint64_t recovery_id) {
+void Client::init(uint64_t recovery_id, uint8_t gamemode) {
     DEBUG_ONLY(assert(game == nullptr);)
     DEBUG_ONLY(recovery_id = 0;)
-    Server::game.add_client(this, recovery_id);
+    EntityID camera_id = NULL_ENTITY;
+    for (GameInstance &game : Server::games) {
+        game.simulation.for_each<kCamera>([&](Simulation *sim, Entity &ent){
+            if (ent.get_recovery_id() == recovery_id) {
+                assert(camera_id == NULL_ENTITY);
+                camera_id = ent.id;
+                gamemode = game.gamemode;
+            }
+        });
+    }
+    if (camera_id == NULL_ENTITY && Server::is_draining) {
+        disconnect(CloseReason::kOutdated, "Outdated Version");
+        return;
+    }
+    Server::games[gamemode].add_client(this, camera_id);
+}
+
+void Client::move(GameInstance *new_game) {
+    if (game == new_game) return;
+    Entity &old_camera = game->simulation.get_ent(camera);
+    game->simulation.request_delete(camera);
+    new_game->add_client(this, NULL_ENTITY);
+    Entity &new_camera = game->simulation.get_ent(camera);
+    new_camera.set_respawn_level(old_camera.get_respawn_level());
+    for (uint32_t i = 0; i < 2 * MAX_SLOT_COUNT; ++i) {
+        PetalTracker::remove_petal(new_camera.get_inventory(i));
+        new_camera.set_inventory(i, old_camera.get_inventory(i));
+        PetalTracker::add_petal(new_camera.get_inventory(i));
+    }
+    in_view.clear();
+    seen_arena = 0;
 }
 
 void Client::remove() {
@@ -53,7 +83,6 @@ void Client::on_message(WebSocket *ws, std::string_view message, uint64_t code) 
     if (!client->verified) {
         if (client->check_invalid(
             validator.validate_uint8() &&
-            validator.validate_uint64() &&
             validator.validate_uint64()
         )) return;
         if (reader.read<uint8_t>() != Serverbound::kVerify) {
@@ -64,8 +93,15 @@ void Client::on_message(WebSocket *ws, std::string_view message, uint64_t code) 
             client->disconnect(CloseReason::kOutdated, "Outdated Version");
             return;
         }
+        if (client->check_invalid(
+            validator.validate_uint64() &&
+            validator.validate_uint8()
+        )) return;
+        uint64_t recovery_id = reader.read<uint64_t>();
+        uint8_t gamemode = reader.read<uint8_t>();
+        if (client->check_invalid(gamemode < Gamemode::kNumGamemodes)) return;
         client->verified = 1;
-        client->init(reader.read<uint64_t>());
+        client->init(recovery_id, gamemode);
         return;
     }
     if (client->game == nullptr) {
@@ -122,7 +158,7 @@ void Client::on_message(WebSocket *ws, std::string_view message, uint64_t code) 
             camera.set_dev(dev);
             player.set_dev(dev);
             std::cout << "player_spawn" << (dev ? "_dev " : " ") << name_or_unnamed(name)
-                << " <" << +player.id.hash << "," << +player.id.id << ">\n";
+                << " <" << +client->game->gamemode << "," << +player.id.hash << "," << +player.id.id << ">\n";
             break;
         }
         case Serverbound::kPetalDelete: {
@@ -169,6 +205,14 @@ void Client::on_message(WebSocket *ws, std::string_view message, uint64_t code) 
             if (player.chat_sent != NULL_ENTITY) break;
             player.chat_sent = alloc_chat(simulation, text, player).id;
             std::cout << "chat " << name_or_unnamed(player.get_name()) << ": " << text << '\n';
+            break;
+        }
+        case Serverbound::kGamemodeSwitch: {
+            if (client->alive()) break;
+            if (client->check_invalid(validator.validate_uint8())) return;
+            uint8_t gamemode = reader.read<uint8_t>();
+            if (client->check_invalid(gamemode < Gamemode::kNumGamemodes)) return;
+            client->move(&Server::games[gamemode]);
             break;
         }
     }

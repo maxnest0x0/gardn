@@ -18,7 +18,6 @@ class Simulation {
     std::array<Entity, ENTITY_CAP> entities;
     StaticArray<EntityID::id_type, ENTITY_CAP> active_entities;
 public:
-    SERVER_ONLY(std::array<uint32_t, PetalID::kNumPetals> petal_count_tracker;)
     SERVER_ONLY(std::array<uint32_t, MAP_DATA.size()> zone_mob_counts;)
     SERVER_ONLY(SpatialHash spatial_hash;)
     Arena arena_info;

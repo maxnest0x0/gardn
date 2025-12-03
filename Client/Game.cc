@@ -51,6 +51,7 @@ namespace Game {
     uint8_t on_game_screen = 0;
     uint8_t show_debug = 0;
     uint8_t auto_delete = 0;
+    uint8_t gamemode = 0;
 
     uint8_t show_chat = 0;
     std::string chat_text;
@@ -253,12 +254,15 @@ void Game::tick(double time) {
         }
         score = player.get_score();
         overlevel_timer = player.get_overlevel_timer();
+        nickname = player.get_name();
     } else {
         player_id = NULL_ENTITY;
         overlevel_timer = 0;
     }
     if (simulation.ent_exists(camera_id))
-        Game::recovery_id = simulation.get_ent(camera_id).get_recovery_id();
+        recovery_id = simulation.get_ent(camera_id).get_recovery_id();
+    if (simulation_ready)
+        gamemode = simulation.arena_info.gamemode;
 
     //event poll
     if (Input::is_mobile) {

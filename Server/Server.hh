@@ -21,7 +21,8 @@ typedef uWS::App WebSocketServer;
 
 namespace Server {
     extern uint8_t OUTGOING_PACKET[MAX_PACKET_LEN];
-    extern GameInstance game;
+    extern std::array<GameInstance, Gamemode::kNumGamemodes> games;
+    extern std::array<uint32_t, PetalID::kNumPetals> petal_count_tracker;
     extern WebSocketServer server;
     extern volatile sig_atomic_t is_draining;
     extern bool is_stopping;

@@ -19,11 +19,10 @@ static void _alloc_drops(Simulation *sim, std::vector<PetalID::T> &success_drops
     size_t count = success_drops.size();
     for (size_t i = count; i > 0; --i) {
         PetalID::T drop_id = success_drops[i - 1];
-        if (PETAL_DATA[drop_id].rarity == RarityID::kUnique && PetalTracker::get_count(sim, drop_id) > 0) {
+        if (PETAL_DATA[drop_id].rarity == RarityID::kUnique && PetalTracker::get_count(drop_id) > 0) {
             success_drops[i - 1] = success_drops[count - 1];
             --count;
             success_drops.pop_back();
-            PetalTracker::remove_petal(sim, drop_id);
         }
     }
     DEBUG_ONLY(assert(success_drops.size() == count);)
@@ -90,13 +89,13 @@ void entity_on_death(Simulation *sim, Entity const &ent) {
         std::vector<PetalID::T> potential = {};
         for (uint32_t i = 0; i < ent.get_loadout_count() + MAX_SLOT_COUNT; ++i) {
             DEBUG_ONLY(assert(ent.get_loadout_ids(i) < PetalID::kNumPetals));
-            PetalTracker::remove_petal(sim, ent.get_loadout_ids(i));
+            PetalTracker::remove_petal(ent.get_loadout_ids(i));
             if (ent.get_loadout_ids(i) != PetalID::kNone && ent.get_loadout_ids(i) != PetalID::kBasic && frand() < 0.95)
                 potential.push_back(ent.get_loadout_ids(i));
         }
         for (uint32_t i = 0; i < ent.deleted_petals.size(); ++i) {
             DEBUG_ONLY(assert(ent.deleted_petals[i] < PetalID::kNumPetals));
-            PetalTracker::remove_petal(sim, ent.deleted_petals[i]);
+            PetalTracker::remove_petal(ent.deleted_petals[i]);
             if (ent.deleted_petals[i] != PetalID::kNone && ent.deleted_petals[i] != PetalID::kBasic && frand() < 0.95)
                 potential.push_back(ent.deleted_petals[i]);
         }
@@ -134,7 +133,7 @@ void entity_on_death(Simulation *sim, Entity const &ent) {
             camera.set_inventory(i, PetalID::kNone); //force reset
         for (uint32_t i = 0; i < num_left; ++i) {
             DEBUG_ONLY(assert(potential.back() < PetalID::kNumPetals));
-            PetalTracker::add_petal(sim, potential.back());
+            PetalTracker::add_petal(potential.back());
             camera.set_inventory(i, potential.back());
             potential.pop_back();
         }
@@ -143,20 +142,19 @@ void entity_on_death(Simulation *sim, Entity const &ent) {
             camera.set_inventory(i, PetalID::kNone); //don't track kNone
         //fill with basics
         for (uint32_t i = num_left; i < loadout_slots_at_level(respawn_level); ++i) {
-            PetalTracker::add_petal(sim, PetalID::kBasic);
+            PetalTracker::add_petal(PetalID::kBasic);
             camera.set_inventory(i, PetalID::kBasic);
         }
     } else if (ent.has_component(kDrop)) {
         if (BitMath::at(ent.flags, EntityFlags::kIsDespawning))
-            PetalTracker::remove_petal(sim, ent.get_drop_id());
+            PetalTracker::remove_petal(ent.get_drop_id());
     } else if (ent.has_component(kCamera)) {
         --Server::player_count;
-        #ifdef GAMEMODE_TDM
-        --sim->get_ent(ent.get_team()).player_count;
-        #endif
+        if (sim->arena_info.gamemode == Gamemode::kTDM)
+            --sim->get_ent(ent.get_team()).player_count;
         if (sim->ent_exists(ent.get_player()))
             sim->request_delete(ent.get_player());
         for (uint32_t i = 0; i < 2 * MAX_SLOT_COUNT; ++i)
-            PetalTracker::remove_petal(sim, ent.get_inventory(i));
+            PetalTracker::remove_petal(ent.get_inventory(i));
     }
 }

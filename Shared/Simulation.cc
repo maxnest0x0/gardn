@@ -23,7 +23,6 @@ void Simulation::reset() {
     arena_info.init();
     #ifdef SERVERSIDE
     spatial_hash.refresh(ARENA_WIDTH, ARENA_HEIGHT);
-    petal_count_tracker = {0};
     zone_mob_counts = {0};
     #endif
 }
