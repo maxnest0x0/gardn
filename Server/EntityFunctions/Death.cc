@@ -72,7 +72,9 @@ void entity_on_death(Simulation *sim, Entity const &ent) {
                 if (frand() < drop_chances[i]) success_drops.push_back(mob_data.drops[i]);
             _alloc_drops(sim, success_drops, ent.get_x(), ent.get_y());
         }
-        if (MOB_DATA[ent.get_mob_id()].attributes.hole && ent.get_team() == NULL_ENTITY && frand() < DIGGER_SPAWN_CHANCE) { 
+        if (MOB_DATA[ent.get_mob_id()].attributes.hole && 
+            BitMath::at(ent.flags, EntityFlags::kSpawnedFromZone) && 
+            frand() < DIGGER_SPAWN_CHANCE) { 
             EntityID team = NULL_ENTITY;
             uint8_t dev = 0;
             if (sim->ent_exists(ent.last_damaged_by)) {

@@ -249,7 +249,7 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
         .rarity = RarityID::kRare,
         .attributes = {
             .clump_radius = 8,
-            .secondary_reload = 0.1,
+            .secondary_reload = 0.5,
             .defend_only = 1,
             .split_projectile = 1
         }
@@ -369,7 +369,7 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
         .rarity = RarityID::kEpic,
         .attributes = {
             .clump_radius = 8,
-            .secondary_reload = 0.1,
+            .secondary_reload = 0.5,
             .poison_damage = {
                 .damage = 20.0,
                 .time = 0.5

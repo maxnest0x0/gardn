@@ -157,12 +157,11 @@ static void tick_hornet_aggro(Simulation *sim, Entity &ent) {
         ++ent.ai_shooting_tick;
         if (ent.ai_shooting_tick >= 1.5 * TPS && dist < 1000) {
             ent.ai_shooting_tick = 0;
-            //spawn missile;
+
             Entity &missile = alloc_petal(sim, PetalID::kMissile, ent);
             missile.damage = 10;
             missile.health = missile.max_health = 10;
-            //missile.health = missile.max_health = 20;
-            //missile.despawn_tick = 1;
+
             entity_set_despawn_tick(missile, 3 * TPS);
             missile.set_angle(ent.get_angle());
             missile.acceleration.unit_normal(ent.get_angle()).set_magnitude(40 * PLAYER_ACCELERATION);
@@ -441,7 +440,12 @@ void tick_ai_behavior(Simulation *sim, Entity &ent) {
                 Vector behind;
                 behind.unit_normal(ent.get_angle() + M_PI);
                 behind *= ent.get_radius();
-                Entity &spawned = alloc_mob(sim, MobID::kSoldierAnt, ent.get_x() + behind.x, ent.get_y() + behind.y, ent.get_team());
+                Entity &spawned = alloc_mob(
+                    sim, MobID::kSoldierAnt, ent.get_x() + behind.x, ent.get_y() + behind.y, 
+                    ent.get_team(), [](Entity &mob) {
+                    mob.score_reward = MOB_DATA[mob.get_mob_id()].xp;
+                    BitMath::set(mob.flags, EntityFlags::kHasCulling);
+                });
                 entity_set_despawn_tick(spawned, 10 * TPS);
                 spawned.set_parent(ent.get_parent());
             }
@@ -465,7 +469,12 @@ void tick_ai_behavior(Simulation *sim, Entity &ent) {
             if (!ent.activated) break;
             if (ent.pending_spawn_count > 0) {
                 Vector rand = Vector::rand(frand() * ent.get_radius());
-                Entity &child = alloc_mob(sim, MobID::kFireAnt, ent.get_x() + rand.x, ent.get_y() + rand.y, ent.get_team());
+                Entity &child = alloc_mob(
+                    sim, MobID::kFireAnt, ent.get_x() + rand.x, ent.get_y() + rand.y,
+                    ent.get_team(), [](Entity &mob) {
+                    mob.score_reward = MOB_DATA[mob.get_mob_id()].xp;
+                    BitMath::set(mob.flags, EntityFlags::kHasCulling);
+                });
                 child.target = ent.target;
                 --ent.pending_spawn_count;
             } else sim->request_delete(ent.id);

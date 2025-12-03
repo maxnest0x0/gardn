@@ -35,18 +35,19 @@ void Particle::tick_title(Renderer &ctx, double dt) {
         else
             draw_static_petal_single(part.id, ctx);
     }
+    std::vector<PetalID::T> ids = {PetalID::kBasic};
+    float freq_sum = 1;
+    for (PetalID::T pot = PetalID::kBasic + 1; pot < PetalID::kNumPetals; ++pot)
+        if (Game::seen_petals[pot]) { ids.push_back(pot); freq_sum += pow(0.5, PETAL_DATA[pot].rarity); }
+
     for (size_t i = 0; i < 4; ++i) {
         if (frand() > 0.02) continue;
         TitleParticleEntity npart;
-        std::vector<PetalID::T> ids = {PetalID::kBasic};
-        float freq_sum = 1;
-        for (PetalID::T pot = PetalID::kBasic + 1; pot < PetalID::kNumPetals; ++pot)
-            if (Game::seen_petals[pot]) { ids.push_back(pot); freq_sum += pow(0.5, PETAL_DATA[pot].rarity); }
         
-        freq_sum *= frand();
+        float freq_score = freq_sum * frand();
         for (PetalID::T id : ids) {
-            freq_sum -= pow(0.5, PETAL_DATA[id].rarity);
-            if (freq_sum > 0) continue;
+            freq_score -= pow(0.5, PETAL_DATA[id].rarity);
+            if (freq_score > 0) continue;
             npart.id = id;   
             npart.y = frand() * ctx.height;
             npart.angle = frand() * 2 * M_PI;
