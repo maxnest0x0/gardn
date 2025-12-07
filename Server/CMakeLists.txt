@@ -78,7 +78,7 @@ endif()
 
 if(WASM_SERVER)
     set(CMAKE_CXX_COMPILER "em++")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWASM_SERVER=1")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWASM_SERVER=1 -pthread")
     add_link_options(-sNO_EXIT_RUNTIME -sEXPORTED_RUNTIME_METHODS=HEAPU8)
     add_link_options(-sEXPORTED_FUNCTIONS=_main,_on_connect,_on_disconnect,_on_message,_tick,_sigusr2,_malloc,_free,_restore_player)
     if (NOT DEBUG) 
