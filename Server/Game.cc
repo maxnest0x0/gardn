@@ -29,7 +29,7 @@ static void _update_client(Simulation *sim, Client *client) {
         if (sim->get_ent(dot_id).get_team() != camera.get_team())
             in_view.insert(dot_id);
     }
-    Writer writer(Server::OUTGOING_PACKET);
+    Writer writer(new uint8_t[MAX_PACKET_LEN]);
     writer.write<uint8_t>(Clientbound::kClientUpdate);
     writer.write<uint8_t>(client->seen_arena);
     writer.write<uint8_t>(Server::is_draining);
@@ -69,6 +69,7 @@ static void _update_client(Simulation *sim, Client *client) {
     //write arena stuff
     sim->arena_info.write(&writer, !client->seen_arena);
     client->seen_arena = 1;
+    assert(writer.at - writer.packet <= MAX_PACKET_LEN);
     client->send_packet(writer.packet, writer.at - writer.packet);
 }
 

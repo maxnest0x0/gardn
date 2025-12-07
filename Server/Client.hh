@@ -23,6 +23,7 @@ public:
     EntityID camera;
     std::set<EntityID> in_view;
     WebSocket *ws;
+    int ws_id;
     uint8_t verified = 0;
     uint8_t seen_arena = 0;
     Client();

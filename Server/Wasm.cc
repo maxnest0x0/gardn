@@ -11,8 +11,10 @@
 #include <unordered_map>
 
 #include <emscripten.h>
+#include <emscripten/threading.h>
 
 std::unordered_map<int, WebSocket *> WS_MAP;
+emscripten::ProxyingQueue Server::queue;
 
 size_t const MAX_BUFFER_LEN = 1024;
 static uint8_t INCOMING_BUFFER[MAX_BUFFER_LEN] = {0};
@@ -21,6 +23,7 @@ extern "C" {
     void on_connect(int ws_id) {
         std::printf("client connect: [%d]\n", ws_id);
         WebSocket *ws = new WebSocket(ws_id);
+        ws->client.ws_id = ws_id;
         WS_MAP.insert({ws_id, ws});
     }
 
@@ -146,7 +149,7 @@ WebSocketServer::WebSocketServer() {
     }, SERVER_PORT, INCOMING_BUFFER, MAX_BUFFER_LEN);
 }
 
-void Server::init() {
+void Server::run() {
     EM_ASM({
         globalThis.Module = Module;
         process.on("SIGUSR2", () => {
@@ -157,20 +160,12 @@ void Server::init() {
         process.on("exit", () => {
             console.log("exiting...");
         });
-    });
 
-    for (GameInstance &game : Server::games) game.init();
-    Server::run();
-}
-
-void Server::run() {
-    EM_ASM({
         Module.tickInterval = setInterval(_tick, $0);
     }, 1000 / TPS);
 }
 
 void Server::stop() {
-    if (Server::is_stopping) return;
     Server::is_stopping = true;
     std::cout << "stopping...\n";
     EM_ASM({
@@ -181,11 +176,19 @@ void Server::stop() {
         }
         clearInterval(Module.tickInterval);
     });
+    Server::barrier.arrive_and_wait();
+    for (std::thread &thread : Server::threads)
+        thread.join();
 }
 
 void Client::send_packet(uint8_t const *packet, size_t size) {
-    if (ws == nullptr) return;
-    ws->send(packet, size);
+    int ws_id = this->ws_id;
+    assert(Server::queue.proxyAsync(emscripten_main_runtime_thread_id(), [=](){
+        auto iter = WS_MAP.find(ws_id);
+        if (iter == WS_MAP.end()) return;
+        iter->second->send(packet, size);
+        delete[] packet;
+    }));
 }
 
 WebSocket::WebSocket(int id) : ws_id(id) {

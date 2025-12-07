@@ -5,8 +5,10 @@
 #include <Shared/Config.hh>
 
 static us_listen_socket_t *socket;
-static std::unordered_set<WebSocket *> connections;
 static struct us_timer_t *delayTimer;
+static int curr_id = 0;
+std::unordered_map<int, WebSocket *> WS_MAP;
+uWS::Loop *Server::loop;
 
 static uWS::App make_server() {
     return uWS::App().ws<Client>("/*", {
@@ -22,9 +24,10 @@ static uWS::App make_server() {
         .upgrade = nullptr,
         .open = [](WebSocket *ws) {
             std::cout << "client connection\n";
-            connections.insert(ws);
             Client *client = ws->getUserData();
             client->ws = ws;
+            client->ws_id = curr_id++;
+            WS_MAP.insert({client->ws_id, ws});
         },
         .message = [](WebSocket *ws, std::string_view message, uWS::OpCode opCode) {
             Client::on_message(ws, message, opCode);
@@ -45,7 +48,9 @@ static uWS::App make_server() {
         },
         .close = [](WebSocket *ws, int code, std::string_view message) {
             Client::on_disconnect(ws, code, message);
-            connections.erase(ws);
+            Client *client = ws->getUserData();
+            if (client == nullptr) return;
+            WS_MAP.erase(client->ws_id);
         }
     }).listen(SERVER_PORT, [](auto *listen_socket) {
         assert(listen_socket);
@@ -54,7 +59,7 @@ static uWS::App make_server() {
     });
 }
 
-void Server::init() {
+void Server::run() {
     struct sigaction sa;
     sa.sa_handler = [](int signum){
         Server::is_draining = true;
@@ -66,13 +71,8 @@ void Server::init() {
         std::cout << "exiting...\n";
     });
 
-    for (GameInstance &game : Server::games) game.init();
-    Server::run();
-}
-
-void Server::run() {
-    struct us_loop_t *loop = (struct us_loop_t *) uWS::Loop::get();
-    delayTimer = us_create_timer(loop, 0, 0);
+    Server::loop = uWS::Loop::get();
+    delayTimer = us_create_timer((struct us_loop_t *) Server::loop, 0, 0);
     us_timer_set(delayTimer, [](us_timer_t *x){ Server::tick(); }, 1, 1000 / TPS);
 
     uWS::App server = make_server();
@@ -80,19 +80,25 @@ void Server::run() {
 }
 
 void Server::stop() {
-    if (Server::is_stopping) return;
     Server::is_stopping = true;
     std::cout << "stopping...\n";
     us_listen_socket_close(0, socket);
-    std::vector<WebSocket *> to_close(connections.begin(), connections.end());
-    for (WebSocket *ws : to_close)
-        ws->end(1001, "Shutting Down");
+    for (auto &p : WS_MAP)
+        p.second->end(1001, "Shutting Down");
     us_timer_close(delayTimer);
+    Server::barrier.arrive_and_wait();
+    for (std::thread &thread : Server::threads)
+        thread.join();
 }
 
 void Client::send_packet(uint8_t const *packet, size_t size) {
-    if (ws == nullptr) return;
-    std::string_view message(reinterpret_cast<char const *>(packet), size);
-    ws->send(message, uWS::OpCode::BINARY, 0);
+    int ws_id = this->ws_id;
+    Server::loop->defer([=](){
+        auto iter = WS_MAP.find(ws_id);
+        if (iter == WS_MAP.end()) return;
+        std::string_view message(reinterpret_cast<char const *>(packet), size);
+        iter->second->send(message, uWS::OpCode::BINARY, 0);
+        delete[] packet;
+    });
 }
 #endif
