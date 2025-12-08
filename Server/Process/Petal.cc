@@ -122,6 +122,7 @@ void tick_petal_behavior(Simulation *sim, Entity &petal) {
                 entity_set_despawn_tick(petal, 3 * TPS);
             }
             break;
+        case PetalID::kLargeWeb:
         case PetalID::kTriweb:
         case PetalID::kWeb: {
             if (BitMath::at(player.input, InputFlags::kAttacking)) {

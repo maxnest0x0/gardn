@@ -222,6 +222,7 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
         .rarity = RarityID::kRare,
         .attributes = {
             .secondary_reload = 0.5,
+            .radius = 100,
             .defend_only = 1,
         }
     },
@@ -451,6 +452,7 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
         .attributes = {
             .clump_radius = 10,
             .secondary_reload = 0.5,
+            .radius = 100,
             .defend_only = 1,
         }
     },
@@ -831,6 +833,21 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
             .icon_angle = M_PI
         }
     },
+    {
+        .name = "Web",
+        .description = "It's really sticky",
+        .health = 10.0,
+        .damage = 5.0,
+        .radius = 10.0,
+        .reload = 3.0,
+        .count = 1,
+        .rarity = RarityID::kMythic,
+        .attributes = {
+            .secondary_reload = 0.5,
+            .radius = 200,
+            .defend_only = 1,
+        }
+    },
 }};
 
 std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
@@ -1071,7 +1088,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {32.0, 48.0},
         .xp = 5,
         .drops = {
-            PetalID::kSand, PetalID::kFaster, PetalID::kStick
+            PetalID::kSand, PetalID::kFaster, PetalID::kStick, PetalID::kLargeWeb
         },
         .attributes = {}
     },

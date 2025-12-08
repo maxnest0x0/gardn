@@ -85,8 +85,10 @@ void entity_on_death(Simulation *sim, Entity const &ent) {
         }
 
     } else if (ent.has_component(kPetal)) {
-        if (ent.get_petal_id() == PetalID::kWeb || ent.get_petal_id() == PetalID::kTriweb)
-            alloc_web(sim, 100, ent);
+        if (ent.get_petal_id() == PetalID::kWeb ||
+            ent.get_petal_id() == PetalID::kTriweb ||
+            ent.get_petal_id() == PetalID::kLargeWeb)
+            alloc_web(sim, PETAL_DATA[ent.get_petal_id()].attributes.radius, ent);
     } else if (ent.has_component(kFlower)) {
         std::vector<PetalID::T> potential = {};
         for (uint32_t i = 0; i < ent.get_loadout_count() + MAX_SLOT_COUNT; ++i) {

@@ -147,6 +147,12 @@ static Ui::Element *make_petal_stat_container(PetalID::T id) {
             new Ui::StaticText(12, format_number(attrs.bounces))
         }, 0, 0, { .h_justify = Style::Left }));
     }
+    if (attrs.radius > 0) {
+        stats.push_back(new Ui::HContainer({
+            new Ui::StaticText(12, "Radius: ", { .fill = 0xffcde23b }),
+            new Ui::StaticText(12, format_number(attrs.radius))
+        }, 0, 0, { .h_justify = Style::Left }));
+    }
     return new Ui::VContainer(stats, 0, 2, { .h_justify = Style::Left });
 }
 

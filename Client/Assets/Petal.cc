@@ -200,6 +200,7 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
         }
         case PetalID::kWeb:
         case PetalID::kTriweb:
+        case PetalID::kLargeWeb:
             ctx.set_fill(0xffffffff);
             ctx.set_stroke(0xffcfcfcf);
             ctx.round_line_cap();
