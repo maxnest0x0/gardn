@@ -1019,6 +1019,22 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
             ctx.fill();
             ctx.stroke();
             break;
+        case PetalID::kSoil:
+            ctx.set_fill(0xff695118);
+            ctx.set_stroke(0xff554213);
+            ctx.set_line_width(3);
+            ctx.begin_path();
+            ctx.move_to(-7, -7);
+            ctx.line_to(2, -11);
+            ctx.line_to(9, -7);
+            ctx.line_to(10, 4);
+            ctx.line_to(0, 10);
+            ctx.line_to(-7, 8);
+            ctx.line_to(-10, 0);
+            ctx.line_to(-7, -7);
+            ctx.fill();
+            ctx.stroke();
+            break;
         default:
             assert(id < PetalID::kNumPetals);
             assert(!"didn't cover petal render");

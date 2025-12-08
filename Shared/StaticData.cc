@@ -848,6 +848,21 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
             .defend_only = 1,
         }
     },
+    {
+        .name = "Soil",
+        .description = "Increases health, but also increases flower size and decreases movement speed",
+        .health = 10.0,
+        .damage = 10.0,
+        .radius = 10.0,
+        .reload = 2.5,
+        .count = 1,
+        .rarity = RarityID::kEpic,
+        .attributes = {
+            .extra_health = 100,
+            .extra_radius = 10,
+            .speed_factor = 0.9
+        }
+    },
 }};
 
 std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
@@ -1137,7 +1152,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {45.0},
         .xp = 25,
         .drops = {
-            PetalID::kIris, PetalID::kWing, PetalID::kAntEgg, PetalID::kTriplet
+            PetalID::kIris, PetalID::kWing, PetalID::kAntEgg, PetalID::kTriplet, PetalID::kSoil
         },
         .attributes = {
             .stationary = 1,
