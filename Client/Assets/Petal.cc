@@ -43,6 +43,7 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
             break;
         case PetalID::kStinger: {
         case PetalID::kTringer:
+        case PetalID::kPinger:
             ctx.set_fill(0xff333333);
             ctx.set_stroke(0xff292929);
             ctx.set_line_width(3);

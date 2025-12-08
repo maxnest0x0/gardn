@@ -817,6 +817,20 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
             .defend_only = 1
         }
     },
+    {
+        .name = "Stinger",
+        .description = "It really hurts, but it's really fragile",
+        .health = 5.0,
+        .damage = 35.0,
+        .radius = 7.0,
+        .reload = 5.5,
+        .count = 5,
+        .rarity = RarityID::kMythic,
+        .attributes = {
+            .clump_radius = 10,
+            .icon_angle = M_PI
+        }
+    },
 }};
 
 std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
@@ -868,7 +882,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {20.0},
         .xp = 4,
         .drops = {
-            PetalID::kLight, PetalID::kStinger, PetalID::kTwin, PetalID::kWing
+            PetalID::kLight, PetalID::kStinger, PetalID::kTwin, PetalID::kWing, PetalID::kPinger
         },
         .attributes = {}
     },
