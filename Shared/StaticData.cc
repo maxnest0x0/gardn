@@ -877,6 +877,21 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
             .health_factor = 0.9
         }
     },
+    {
+        .name = "Shell",
+        .description = "Adds a temporary shield to yourself or allies",
+        .health = 25.0,
+        .damage = 5.0,
+        .radius = 10.0,
+        .reload = 3.5,
+        .count = 1,
+        .rarity = RarityID::kLegendary,
+        .attributes = {
+            .secondary_reload = 1.0,
+            .burst_shield = 22,
+            .defend_only = 1
+        }
+    },
 }};
 
 std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
@@ -1038,7 +1053,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {10.0, 25.0},
         .xp = 1,
         .drops = {
-            PetalID::kHeavy, PetalID::kLight, PetalID::kRock
+            PetalID::kHeavy, PetalID::kLight, PetalID::kRock, PetalID::kShell
         },
         .attributes = {
             .stationary = 1

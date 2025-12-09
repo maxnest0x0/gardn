@@ -80,6 +80,7 @@ SINGLE(Petal, petal_flags, uint8_t)
 
 #define FIELDS_Health \
 SINGLE(Health, health_ratio, Float) \
+SINGLE(Health, shield_ratio, Float) \
 SINGLE(Health, damaged, StickyFlag) \
 SINGLE(Health, revived, StickyFlag)
 
@@ -141,6 +142,7 @@ SINGLE(Animation, anim_type, uint8_t)
     SINGLE(poison_dealer, EntityID, =NULL_ENTITY) \
     SINGLE(poison_damage, PoisonDamage, ={}) \
     SINGLE(health, float, =0) \
+    SINGLE(shield, float, =0) \
     SINGLE(max_health, float, =0) \
     SINGLE(damage, float, =0) \
     SINGLE(armor, float, =0) \

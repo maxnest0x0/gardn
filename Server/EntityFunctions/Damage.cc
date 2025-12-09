@@ -39,10 +39,18 @@ void inflict_damage(Simulation *sim, EntityID const atk_id, EntityID const def_i
     else if (type == DamageType::kPoison) amt -= defender.poison_armor;
     if (amt <= 0) return;
     //if (amt <= defender.armor) return;
+    float damage_dealt = 0;
+    if (type != DamageType::kPassive) {
+        defender.set_damaged(1);
+        float old_shield = defender.shield;
+        defender.shield = fclamp(defender.shield - amt, 0, defender.shield);
+        damage_dealt += old_shield - defender.shield;
+        amt -= old_shield - defender.shield;
+    }
     float old_health = defender.health;
-    if (type != DamageType::kPassive) defender.set_damaged(1);
     defender.health = fclamp(defender.health - amt, 0, defender.health);  
-    float damage_dealt = old_health - defender.health;
+    damage_dealt += old_health - defender.health;
+    amt -= old_health - defender.health;
     //ant hole spawns
     //floor start, ceil end
     if (defender.has_component(kMob) && defender.get_mob_id() == MobID::kAntHole) {

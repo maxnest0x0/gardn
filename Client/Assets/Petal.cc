@@ -1061,6 +1061,36 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
             }
             break;
         }
+        case PetalID::kShell:
+            ctx.scale(0.5);
+            ctx.set_fill(0xfffcdd86);
+            ctx.set_stroke(0xffccb36d);
+            ctx.set_line_width(5);
+            ctx.begin_path();
+            ctx.partial_arc(0, 0, 30, -0.4 * M_PI, 0.4 * M_PI, 0);
+            ctx.qcurve_to(0, 20, -15, 8);
+            ctx.qcurve_to(-20, 0, -15, -8);
+            ctx.qcurve_to(0, -20, 30 * cosf(-0.4 * M_PI), 30 * sinf(-0.4 * M_PI));
+            ctx.fill();
+            ctx.stroke();
+            ctx.set_line_width(4);
+            ctx.begin_path();
+            ctx.move_to(12, 15);
+            ctx.qcurve_to(0, 8, -8, 5);
+            ctx.stroke();
+            ctx.begin_path();
+            ctx.move_to(17.4, 6);
+            ctx.qcurve_to(0, 3.2, -6.2, 2);
+            ctx.stroke();
+            ctx.begin_path();
+            ctx.move_to(17.4, -6);
+            ctx.qcurve_to(0, -3.2, -6.2, -2);
+            ctx.stroke();
+            ctx.begin_path();
+            ctx.move_to(12, -15);
+            ctx.qcurve_to(0, -8, -8, -5);
+            ctx.stroke();
+            break;
         default:
             assert(id < PetalID::kNumPetals);
             assert(!"didn't cover petal render");

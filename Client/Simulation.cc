@@ -50,6 +50,7 @@ void Entity::tick_lerp(float amt) {
     }
     if (has_component(kHealth)) {
         health_ratio.step(amt);
+        shield_ratio.step(amt);
         if (damaged == 1 && damage_flash < 0.1 && !pending_delete)
             damage_flash = 1;
         else //damage_flash = fclamp(damage_flash - Ui::dt / 150, 0, 1);
@@ -66,7 +67,7 @@ void Entity::tick_lerp(float amt) {
                 if (frand() < fclamp(revival_burst * Ui::dt * 60 / 1000, 0, 1))
                     Particle::add_revival_particle(x, y);
         revived.clear();
-        if ((float) health_ratio > 0.999)
+        if ((float) health_ratio > 0.999 && (float) shield_ratio < 0.001)
             healthbar_opacity = lerp(healthbar_opacity, 0, amt);
         else
             healthbar_opacity = 1;

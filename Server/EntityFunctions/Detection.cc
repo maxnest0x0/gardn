@@ -90,3 +90,20 @@ EntityID find_teammate_to_heal(Simulation *simulation, Entity const &entity, flo
     });
     return ret;
 }
+
+EntityID find_teammate_to_shield(Simulation *simulation, Entity const &entity, float radius, float shield) {
+    EntityID ret;
+    float min_shield = 10000;
+    simulation->spatial_hash.query(entity.get_x(), entity.get_y(), radius, radius, [&](Simulation *sim, Entity &ent){
+        if (!sim->ent_alive(ent.id)) return;
+        if (ent.get_team() != entity.get_team()) return;
+        if (!ent.has_component(kFlower)) return;
+        if (BitMath::at(ent.flags, EntityFlags::kZombie)) return;
+        float dist = Vector(ent.get_x()-entity.get_x(),ent.get_y()-entity.get_y()).magnitude();
+        if (dist < radius && ent.shield < min_shield && ent.shield + shield <= ent.max_health) {
+            min_shield = ent.shield;
+            ret = ent.id;
+        }
+    });
+    return ret;
+}

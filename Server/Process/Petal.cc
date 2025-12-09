@@ -96,6 +96,19 @@ void tick_petal_behavior(Simulation *sim, Entity &petal) {
             delta.set_magnitude(PLAYER_ACCELERATION * 4);
             petal.acceleration = delta;
         }
+    } else if (petal_data.attributes.burst_shield > 0) {
+        EntityID potential = find_teammate_to_shield(sim, petal, 200, petal_data.attributes.burst_shield);
+        if (potential != NULL_ENTITY) {
+            Entity &ent = sim->get_ent(potential);
+            Vector delta(ent.get_x() - petal.get_x(), ent.get_y() - petal.get_y());
+            if (delta.magnitude() < petal.get_radius()) {
+                ent.shield += petal_data.attributes.burst_shield;
+                sim->request_delete(petal.id);
+                return;
+            }
+            delta.set_magnitude(PLAYER_ACCELERATION * 4);
+            petal.acceleration = delta;
+        }
     }
     switch (petal.get_petal_id()) {
         case PetalID::kMissile:

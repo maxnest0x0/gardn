@@ -35,4 +35,10 @@ void render_health(Renderer &ctx, Entity const &ent) {
     ctx.move_to(0, 0);
     ctx.line_to(2 * w * ent.get_health_ratio(), 0);
     ctx.stroke();
+    ctx.set_stroke(0xffffffff);
+    ctx.set_line_width(5);
+    ctx.begin_path();
+    ctx.move_to(0, 0);
+    ctx.line_to(2 * w * ent.get_shield_ratio(), 0);
+    ctx.stroke();
 }
