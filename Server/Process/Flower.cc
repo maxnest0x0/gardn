@@ -18,6 +18,7 @@ struct PlayerBuffs {
     float damage_factor = 1;
     float reload_factor = 1;
     float extra_radius = 0;
+    float health_factor = 1;
     uint8_t yinyang_count = 0;
     uint8_t is_poisonous = 0;
     uint8_t equip_flags = 0;
@@ -58,6 +59,7 @@ static struct PlayerBuffs _get_petal_passive_buffs(Simulation *sim, Entity &play
         buffs.extra_rot += attrs.extra_rotation_speed;
         buffs.extra_health += attrs.extra_health;
         buffs.extra_radius += attrs.extra_radius;
+        buffs.health_factor *= attrs.health_factor;
         player.speed_ratio *= attrs.speed_factor;
         player.damage_reflection = std::fmax(player.damage_reflection, attrs.damage_reflection);
         player.poison_armor = std::fmax(player.poison_armor, attrs.poison_armor / TPS);
@@ -106,7 +108,7 @@ void tick_player_behavior(Simulation *sim, Entity &player) {
     PlayerBuffs const buffs = _get_petal_passive_buffs(sim, player);
     float health_ratio = player.health / player.max_health;
     if (!player.has_component(kMob)) {
-        player.max_health = hp_at_level(score_to_level(player.get_score())) + buffs.extra_health;
+        player.max_health = hp_at_level(score_to_level(player.get_score())) * buffs.health_factor + buffs.extra_health;
         player.damage = BASE_BODY_DAMAGE + buffs.extra_damage;
         player.set_radius(BASE_FLOWER_RADIUS + buffs.extra_radius);
     }

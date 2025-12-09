@@ -153,6 +153,24 @@ static Ui::Element *make_petal_stat_container(PetalID::T id) {
             new Ui::StaticText(12, format_number(attrs.radius))
         }, 0, 0, { .h_justify = Style::Left }));
     }
+    if (attrs.speed_factor < 1) {
+        stats.push_back(new Ui::HContainer({
+            new Ui::StaticText(12, "Movement Speed: ", { .fill = 0xffcde23b }),
+            new Ui::StaticText(12, "-" + format_pct(100 * (1 - attrs.speed_factor)))
+        }, 0, 0, { .h_justify = Style::Left }));
+    }
+    if (attrs.health_factor < 1) {
+        stats.push_back(new Ui::HContainer({
+            new Ui::StaticText(12, "Flower Health: ", { .fill = 0xff77ff77 }),
+            new Ui::StaticText(12, "-" + format_pct(100 * (1 - attrs.health_factor)))
+        }, 0, 0, { .h_justify = Style::Left }));
+    }
+    if (attrs.speed_factor > 1) {
+        stats.push_back(new Ui::HContainer({
+            new Ui::StaticText(12, "Movement Speed: ", { .fill = 0xffcde23b }),
+            new Ui::StaticText(12, "+" + format_pct(100 * (attrs.speed_factor - 1)))
+        }, 0, 0, { .h_justify = Style::Left }));
+    }
     return new Ui::VContainer(stats, 0, 2, { .h_justify = Style::Left });
 }
 

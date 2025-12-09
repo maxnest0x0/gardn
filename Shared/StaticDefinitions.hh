@@ -100,6 +100,7 @@ namespace PetalID {
         kPinger,
         kLargeWeb,
         kSoil,
+        kPowder,
         kNumPetals
     };
 };
@@ -264,6 +265,7 @@ struct PetalAttributes {
     float radius = 0;
     float extra_radius = 0;
     float speed_factor = 1;
+    float health_factor = 1;
     struct PoisonDamage poison_damage;
     uint8_t defend_only = 0;
     float icon_angle = 0;

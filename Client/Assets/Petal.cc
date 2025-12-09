@@ -1035,6 +1035,32 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
             ctx.fill();
             ctx.stroke();
             break;
+        case PetalID::kPowder: {
+            std::array<float, 15> magic1 = {
+                0.29652830958366394, 0.9893031120300293, 0.7122714519500732,
+                0.9056259393692017, 0.8531715273857117, 0.5379303693771362,
+                0.961118221282959, 0.6379047632217407, 0.5198644399642944,
+                0.8135024309158325, 0.9665305614471436, 0.9950006008148193,
+                0.9969583749771118, 0.6786581873893738, 0.33334872126579285,
+            };
+            std::array<float, 15> magic2 = {
+                4.726043224334717, 1.6176453828811646, 3.486619472503662,
+                5.706995010375977, 0.6529965400695801, 2.350846529006958,
+                1.4534027576446533, 3.7123541831970215, 0.8349775671958923,
+                2.1903045177459717, 2.396843671798706, 3.7029001712799072,
+                3.5439674854278564, 5.037447929382324, 4.9235992431640625,
+            };
+            ctx.set_fill(0xffeeeeee);
+            for (uint32_t i = 0; i < 15; ++i) {
+                float animation = cosf((attrs.animation / 1000 + i / 15.0) * 2 * M_PI);
+                float radius = magic1[i] * animation * 10;
+                float angle = magic2[i] + animation * 2 * M_PI;
+                ctx.begin_path();
+                ctx.arc(radius * cosf(angle), radius * sinf(angle), 4);
+                ctx.fill();
+            }
+            break;
+        }
         default:
             assert(id < PetalID::kNumPetals);
             assert(!"didn't cover petal render");

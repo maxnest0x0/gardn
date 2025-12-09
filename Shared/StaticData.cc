@@ -856,11 +856,25 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
         .radius = 10.0,
         .reload = 2.5,
         .count = 1,
-        .rarity = RarityID::kEpic,
+        .rarity = RarityID::kLegendary,
         .attributes = {
             .extra_health = 100,
             .extra_radius = 10,
             .speed_factor = 0.9
+        }
+    },
+    {
+        .name = "Powder",
+        .description = "RAQUETASO!",
+        .health = 10.0,
+        .damage = 10.0,
+        .radius = 10.0,
+        .reload = 2.5,
+        .count = 1,
+        .rarity = RarityID::kLegendary,
+        .attributes = {
+            .speed_factor = 1.1,
+            .health_factor = 0.9
         }
     },
 }};
@@ -1088,7 +1102,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {35.0},
         .xp = 4,
         .drops = {
-            PetalID::kSand, PetalID::kFaster, PetalID::kSalt, PetalID::kStick
+            PetalID::kSand, PetalID::kFaster, PetalID::kSalt, PetalID::kStick, PetalID::kPowder
         },
         .attributes = {
             .segments = 6
