@@ -16,7 +16,7 @@ void tick_health_behavior(Simulation *sim, Entity &ent) {
         ent.poison_dealer = NULL_ENTITY;
     }
     if (ent.dandy_ticks > 0) --ent.dandy_ticks;
-    ent.shield = fclamp(ent.shield - ent.shield / (30 * TPS), 0, ent.max_health);
+    ent.shield = fclamp(ent.shield - ent.shield / (20 * TPS), 0, ent.max_health);
     if (ent.max_health == 0) return;
     if (ent.health <= 0) sim->request_delete(ent.id);
     if (ent.has_component(kFlower)) {

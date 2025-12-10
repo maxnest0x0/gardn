@@ -1063,6 +1063,7 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
         }
         case PetalID::kShell:
             ctx.scale(0.5);
+            ctx.translate(-5, 0);
             ctx.set_fill(0xfffcdd86);
             ctx.set_stroke(0xffccb36d);
             ctx.set_line_width(5);

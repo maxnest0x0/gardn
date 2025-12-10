@@ -67,7 +67,7 @@ void Entity::tick_lerp(float amt) {
                 if (frand() < fclamp(revival_burst * Ui::dt * 60 / 1000, 0, 1))
                     Particle::add_revival_particle(x, y);
         revived.clear();
-        if ((float) health_ratio > 0.999 && (float) shield_ratio < 0.001)
+        if ((float) health_ratio > 0.999 && (float) shield_ratio < 0.01)
             healthbar_opacity = lerp(healthbar_opacity, 0, amt);
         else
             healthbar_opacity = 1;
