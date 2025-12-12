@@ -107,6 +107,7 @@ namespace PetalID {
         kPowder,
         kShell,
         kSponge,
+        kHoney,
         kNumPetals
     };
 };
@@ -204,6 +205,7 @@ namespace FaceFlags {
         kDefending,
         kPoisoned,
         kDandelioned,
+        kHoneyed,
         kDeadEyes,
         kSquareEyes,
         kDeveloper

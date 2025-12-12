@@ -244,19 +244,22 @@ void tick_player_behavior(Simulation *sim, Entity &player) {
         player.set_face_flags(player.get_face_flags() | (1 << FaceFlags::kPoisoned));
     if (player.dandy_ticks > 0)
         player.set_face_flags(player.get_face_flags() | (1 << FaceFlags::kDandelioned));
+    if (player.honey_ticks > 0)
+        player.set_face_flags(player.get_face_flags() | (1 << FaceFlags::kHoneyed));
     if (player.get_dev())
         player.set_face_flags(player.get_face_flags() | (1 << FaceFlags::kDeveloper));
+    float rot = (BASE_PETAL_ROTATION_SPEED + buffs.extra_rot) * (player.honey_ticks > 0 ? 0.5 : 1) / TPS;
     if (buffs.yinyang_count < 8) {
         switch (buffs.yinyang_count % 3) {
             case 0:
-                player.heading_angle += (BASE_PETAL_ROTATION_SPEED + buffs.extra_rot) / TPS;
+                player.heading_angle += rot;
                 break;
             case 1:
-                player.heading_angle -= (BASE_PETAL_ROTATION_SPEED + buffs.extra_rot) / TPS;
+                player.heading_angle -= rot;
                 break;
             default:
                 break;
         }
     } else 
-        player.heading_angle += 10 * (BASE_PETAL_ROTATION_SPEED + buffs.extra_rot) / TPS;
+        player.heading_angle += 10 * rot;
 }

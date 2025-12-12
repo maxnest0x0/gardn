@@ -132,6 +132,7 @@ SINGLE(Animation, anim_type, uint8_t)
     SINGLE(slow_inflict, game_tick_t, =0) \
     SINGLE(immunity_ticks, game_tick_t, =0) \
     SINGLE(dandy_ticks, game_tick_t, =0) \
+    SINGLE(honey_ticks, game_tick_t, =0) \
     SINGLE(poison_ticks, game_tick_t, =0) \
     SINGLE(despawn_tick, game_tick_t, =0) \
     SINGLE(secondary_reload, game_tick_t, =0) \

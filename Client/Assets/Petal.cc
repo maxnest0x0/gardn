@@ -1098,7 +1098,6 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
             ctx.set_stroke(0xffc2a37d);
             ctx.set_line_width(3);
             ctx.begin_path();
-            ctx.move_to(r, 0);
             for (uint32_t i = 0; i < 7; ++i) {
                 Vector point1 = Vector().unit_normal(2 * M_PI * i / 7).set_magnitude(r);
                 Vector point2 = Vector().unit_normal(2 * M_PI * (i + 1) / 7).set_magnitude(r);
@@ -1107,6 +1106,19 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
                 float angle1 = (point1 - center).angle();
                 float angle2 = (point2 - center).angle();
                 ctx.partial_arc(center.x, center.y, radius, angle1, angle2, 0);
+            }
+            ctx.fill();
+            ctx.stroke();
+            break;
+        case PetalID::kHoney:
+            ctx.set_fill(0xfff7cf2f);
+            ctx.set_stroke(0xffc8a826);
+            ctx.set_line_width(3);
+            ctx.begin_path();
+            ctx.move_to(r, 0);
+            for (uint32_t i = 1; i <= 6; ++i) {
+                float angle = 2 * M_PI * i / 6;
+                ctx.line_to(r * cosf(angle), r * sinf(angle));
             }
             ctx.fill();
             ctx.stroke();

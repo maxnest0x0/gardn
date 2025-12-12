@@ -110,6 +110,7 @@ void inflict_damage(Simulation *sim, EntityID const atk_id, EntityID const def_i
             defender.poison_ticks = 0;
             defender.slow_ticks = 0;
             defender.dandy_ticks = 0;
+            defender.honey_ticks = 0;
             defender.immunity_ticks = 1.0 * TPS;
         }
     }
@@ -129,10 +130,12 @@ void inflict_damage(Simulation *sim, EntityID const atk_id, EntityID const def_i
         if (defender.slow_ticks < attacker.slow_inflict)
             defender.slow_ticks = attacker.slow_inflict;
 
-        if (attacker.has_component(kPetal) &&
-            attacker.get_petal_id() == PetalID::kDandelion &&
-            defender.dandy_ticks < 10 * TPS)
-            defender.dandy_ticks = 10 * TPS;
+        if (attacker.has_component(kPetal)) {
+            if (attacker.get_petal_id() == PetalID::kDandelion && defender.dandy_ticks < 10 * TPS)
+                defender.dandy_ticks = 10 * TPS;
+            else if (attacker.get_petal_id() == PetalID::kHoney && defender.honey_ticks < 10 * TPS)
+                defender.honey_ticks = 10 * TPS;
+        }
     }
 
     if (!sim->ent_alive(defender.target)) {

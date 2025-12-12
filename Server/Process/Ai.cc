@@ -155,7 +155,7 @@ static void tick_hornet_aggro(Simulation *sim, Entity &ent) {
         }
         ent.set_angle(v.angle());
         ++ent.ai_shooting_tick;
-        if (ent.ai_shooting_tick >= 1.5 * TPS && dist < 1000) {
+        if (ent.ai_shooting_tick >= 1.5 * TPS * (ent.honey_ticks > 0 ? 3 : 1) && dist < 1000) {
             ent.ai_shooting_tick = 0;
 
             Entity &missile = alloc_petal(sim, PetalID::kMissile, ent);
@@ -431,12 +431,12 @@ void tick_ai_behavior(Simulation *sim, Entity &ent) {
             tick_default_aggro(sim, ent, 1.20);
             break;
         case MobID::kSpider:
-            if (ent.lifetime % (TPS) == 0) 
+            if (ent.lifetime % (TPS * (ent.honey_ticks > 0 ? 3 : 1)) == 0) 
                 alloc_web(sim, 25, ent);
             tick_default_aggro(sim, ent, 1.20);
             break;
         case MobID::kQueenAnt:
-            if (ent.lifetime % (2 * TPS) == 0) {
+            if (ent.lifetime % (2 * TPS * (ent.honey_ticks > 0 ? 3 : 1)) == 0) {
                 Vector behind;
                 behind.unit_normal(ent.get_angle() + M_PI);
                 behind *= ent.get_radius();
@@ -467,6 +467,7 @@ void tick_ai_behavior(Simulation *sim, Entity &ent) {
             break;
         case MobID::kAntBurrow:
             if (!ent.activated) break;
+            if (ent.lifetime % (ent.honey_ticks > 0 ? 3 : 1) > 0) break;
             if (ent.pending_spawn_count > 0) {
                 Vector rand = Vector::rand(frand() * ent.get_radius());
                 Entity &child = alloc_mob(

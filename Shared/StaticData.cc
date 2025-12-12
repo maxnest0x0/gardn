@@ -903,6 +903,17 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
             .defend_only = 1
         }
     },
+    {
+        .name = "Honey",
+        .description = "This is so sticky it slows down whatever it hits",
+        .health = 10.0,
+        .damage = 10.0,
+        .radius = 11.0,
+        .reload = 1.7,
+        .count = 1,
+        .rarity = RarityID::kRare,
+        .attributes = {}
+    },
 }};
 
 std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
@@ -954,7 +965,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {20.0},
         .xp = 4,
         .drops = {
-            PetalID::kLight, PetalID::kStinger, PetalID::kTwin, PetalID::kWing, PetalID::kPinger
+            PetalID::kLight, PetalID::kStinger, PetalID::kTwin, PetalID::kWing, PetalID::kPinger, PetalID::kHoney
         },
         .attributes = {}
     },

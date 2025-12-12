@@ -43,6 +43,8 @@ void draw_static_flower(Renderer &ctx, FlowerRenderAttributes attributes) {
         base_color = 0xffce76db;
     else if (BitMath::at(attributes.face_flags, FaceFlags::kDandelioned)) 
         base_color = Renderer::MIX(base_color, 0xffffffff, 0.4);
+    else if (BitMath::at(attributes.face_flags, FaceFlags::kHoneyed)) 
+        base_color = Renderer::MIX(base_color, 0xfff7cf2f, 0.8);
     ctx.set_stroke(Renderer::HSV(base_color, 0.8));
     ctx.set_fill(base_color);
     ctx.set_line_width(3);
