@@ -2,9 +2,6 @@
 
 #include <cmath>
 
-uint32_t const MAX_LEVEL = 99;
-uint32_t const TPS = 20;
-
 float const PETAL_DISABLE_DELAY = 45.0f; //seconds
 float const PLAYER_ACCELERATION = 5.0f;
 float const DEFAULT_FRICTION = 1.0f/3.0f;
@@ -892,6 +889,20 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
             .defend_only = 1
         }
     },
+    {
+        .name = "Sponge",
+        .description = "Spreads damage taken by the flower over a period of time",
+        .health = 100.0,
+        .damage = 1.0,
+        .radius = 12.0,
+        .reload = 2.5,
+        .count = 1,
+        .rarity = RarityID::kLegendary,
+        .attributes = {
+            .period = 10.0,
+            .defend_only = 1
+        }
+    },
 }};
 
 std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
@@ -1068,7 +1079,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {50.0, 75.0},
         .xp = 10,
         .drops = {
-            PetalID::kHeavy, PetalID::kRock, PetalID::kHeaviest, PetalID::kMoon
+            PetalID::kHeavy, PetalID::kRock, PetalID::kHeaviest, PetalID::kMoon, PetalID::kSponge
         }, 
         .attributes = {
             .stationary = 1

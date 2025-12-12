@@ -5,6 +5,8 @@
 
 #include <cstdint>
 
+inline uint32_t const MAX_LEVEL = 99;
+inline uint32_t const TPS = 20;
 inline uint32_t const ARENA_WIDTH = 40000;
 inline uint32_t const ARENA_HEIGHT = 4000;
 
@@ -17,6 +19,7 @@ inline uint32_t const MAX_DROPS_PER_MOB = 6;
 inline uint32_t const CHAT_SIZE = 5;
 inline uint32_t const FIRE_ANT_COUNT = 20;
 inline uint32_t const MAX_LIGHTNING_BOUNCES = 15;
+inline uint32_t const MAX_SPONGE_PERIOD = 10 * TPS;
 
 namespace DamageType {
     enum : uint8_t {
@@ -25,7 +28,8 @@ namespace DamageType {
         kPoison,
         kReflect,
         kLightning,
-        kUranium
+        kUranium,
+        kSponge
     };
 }
 
@@ -102,6 +106,7 @@ namespace PetalID {
         kSoil,
         kPowder,
         kShell,
+        kSponge,
         kNumPetals
     };
 };
@@ -268,6 +273,7 @@ struct PetalAttributes {
     float speed_factor = 1;
     float health_factor = 1;
     float burst_shield = 0;
+    float period = 0;
     struct PoisonDamage poison_damage;
     uint8_t defend_only = 0;
     float icon_angle = 0;

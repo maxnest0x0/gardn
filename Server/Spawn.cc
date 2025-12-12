@@ -299,6 +299,8 @@ void player_spawn(Simulation *sim, Entity &camera, Entity &player) {
 
     for (uint32_t i = player.get_loadout_count(); i < player.get_loadout_count() + MAX_SLOT_COUNT; ++i)
         player.set_loadout_ids(i, camera.get_inventory(i));
+    for (uint32_t i = 0; i < MAX_SPONGE_PERIOD; ++i)
+        player.delayed_damage.push_back(0);
 
     //peaceful transfer, no petal tracking needed
     for (uint32_t i = 0; i < MAX_SLOT_COUNT * 2; ++i)

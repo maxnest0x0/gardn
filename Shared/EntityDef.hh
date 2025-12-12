@@ -161,7 +161,8 @@ SINGLE(Animation, anim_type, uint8_t)
     \
     SINGLE(zone, uint8_t, =0) \
     SINGLE(deletion_tick, uint8_t, =0) \
-    SINGLE(deleted_petals, circ_arr_t, ={}) \
+    SINGLE(deleted_petals, deleted_petals_t, ={}) \
+    SINGLE(delayed_damage, delayed_damage_t, ={}) \
     SINGLE(client, Client *, =nullptr) \
     \
     SINGLE(chat_sent, EntityID, =NULL_ENTITY) \

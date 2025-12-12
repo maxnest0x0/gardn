@@ -3,6 +3,7 @@
 #include <Client/StaticData.hh>
 
 #include <Helpers/Bits.hh>
+#include <Helpers/Vector.hh>
 
 #include <cmath>
 
@@ -1090,6 +1091,24 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
             ctx.begin_path();
             ctx.move_to(12, -15);
             ctx.qcurve_to(0, -8, -8, -5);
+            ctx.stroke();
+            break;
+        case PetalID::kSponge:
+            ctx.set_fill(0xffefc99a);
+            ctx.set_stroke(0xffc2a37d);
+            ctx.set_line_width(3);
+            ctx.begin_path();
+            ctx.move_to(r, 0);
+            for (uint32_t i = 0; i < 7; ++i) {
+                Vector point1 = Vector().unit_normal(2 * M_PI * i / 7).set_magnitude(r);
+                Vector point2 = Vector().unit_normal(2 * M_PI * (i + 1) / 7).set_magnitude(r);
+                Vector center = (point1 + point2) * 0.5;
+                float radius = (point1 - point2).magnitude() * 0.5;
+                float angle1 = (point1 - center).angle();
+                float angle2 = (point2 - center).angle();
+                ctx.partial_arc(center.x, center.y, radius, angle1, angle2, 0);
+            }
+            ctx.fill();
             ctx.stroke();
             break;
         default:

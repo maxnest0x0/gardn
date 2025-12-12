@@ -15,6 +15,10 @@ void tick_health_behavior(Simulation *sim, Entity &ent) {
         ent.poison_inflicted = 0;
         ent.poison_dealer = NULL_ENTITY;
     }
+    if (get_sponge_period(sim, ent) > 0) {
+        inflict_damage(sim, ent.last_damaged_by, ent.id, ent.delayed_damage[0], DamageType::kSponge);
+        ent.delayed_damage.push_back(0);
+    }
     if (ent.dandy_ticks > 0) --ent.dandy_ticks;
     ent.shield = fclamp(ent.shield - ent.shield / (20 * TPS), 0, ent.max_health);
     if (ent.max_health == 0) return;

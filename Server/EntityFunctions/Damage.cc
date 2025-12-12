@@ -19,6 +19,20 @@ static bool _yggdrasil_revival_clause(Simulation *sim, Entity &player) {
     return false;
 }
 
+game_tick_t get_sponge_period(Simulation *sim, Entity &player) {
+    if (!player.has_component(kFlower)) return 0;
+    for (uint32_t i = 0; i < player.get_loadout_count(); ++i) {
+        LoadoutSlot &slot = player.loadout[i];
+        if (slot.get_petal_id() != PetalID::kSponge) continue;
+        for (uint32_t j = 0; j < slot.size(); ++j) {
+            LoadoutPetal &petal_slot = slot.petals[j];
+            if (sim->ent_alive(petal_slot.ent_id))
+                return PETAL_DATA[slot.get_petal_id()].attributes.period * TPS;
+        }
+    }
+    return 0;
+}
+
 void inflict_damage(Simulation *sim, EntityID const atk_id, EntityID const def_id, float amt, uint8_t type) {
     if (amt <= 0) return;
     if (!sim->ent_alive(def_id)) return;
@@ -41,7 +55,17 @@ void inflict_damage(Simulation *sim, EntityID const atk_id, EntityID const def_i
     //if (amt <= defender.armor) return;
     float damage_dealt = 0;
     if (type != DamageType::kPassive) {
-        defender.set_damaged(1);
+        if (type != DamageType::kSponge) {
+            defender.set_damaged(1);
+            game_tick_t period = get_sponge_period(sim, defender);
+            if (period > 0) {
+                DEBUG_ONLY(assert(period <= MAX_SPONGE_PERIOD);)
+                float dmg = amt / period;
+                for (uint32_t i = 0; i < period; ++i)
+                    defender.delayed_damage[i] += dmg;
+                amt = 0;
+            }
+        }
         float old_shield = defender.shield;
         defender.shield = fclamp(defender.shield - amt, 0, defender.shield);
         damage_dealt += old_shield - defender.shield;

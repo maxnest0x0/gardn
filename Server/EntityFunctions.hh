@@ -25,3 +25,4 @@ void entity_set_despawn_tick(Entity &, game_tick_t);
 void entity_clear_references(Simulation *, Entity &);
 
 void delete_petal(Simulation *, Entity &, PetalID::T);
+game_tick_t get_sponge_period(Simulation *, Entity &);
