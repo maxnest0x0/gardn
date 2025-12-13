@@ -107,3 +107,20 @@ EntityID find_teammate_to_shield(Simulation *simulation, Entity const &entity, f
     });
     return ret;
 }
+
+EntityID find_nearest_magnet(Simulation *simulation, Entity const &entity, float radius) {
+    EntityID ret;
+    float min_dist = radius;
+    simulation->spatial_hash.query(entity.get_x(), entity.get_y(), radius, radius, [&](Simulation *sim, Entity &ent){
+        if (!sim->ent_alive(ent.id)) return;
+        if (!ent.has_component(kPetal)) return;
+        if (PETAL_DATA[ent.get_petal_id()].attributes.pickup_range == 0) return;
+        DEBUG_ONLY(assert(PETAL_DATA[ent.get_petal_id()].attributes.pickup_range <= radius);)
+        float dist = Vector(ent.get_x()-entity.get_x(),ent.get_y()-entity.get_y()).magnitude();
+        if (dist < min_dist && dist < PETAL_DATA[ent.get_petal_id()].attributes.pickup_range) {
+            min_dist = dist;
+            ret = ent.id;
+        }
+    });
+    return ret;
+}

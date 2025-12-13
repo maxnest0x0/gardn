@@ -12,10 +12,8 @@ void Entity::tick_lerp(float amt) {
     if (has_component(kPhysics)) {
         float prev_x = x;
         float prev_y = y;
-        if (!pending_delete) {
-            x.step(amt);
-            y.step(amt);
-        }
+        x.step(amt);
+        y.step(amt);
         if (has_component(kMob)) {
             Vector vel(x - prev_x, y - prev_y);
             animation += (1 + 0.75 * vel.magnitude()) * 0.075;

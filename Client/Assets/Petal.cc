@@ -1123,6 +1123,37 @@ void draw_static_petal_single(PetalID::T id, Renderer &ctx, PetalRenderAttribute
             ctx.fill();
             ctx.stroke();
             break;
+        case PetalID::kMagnet:
+            ctx.scale(0.6);
+            ctx.translate(-25, 0);
+            for (uint32_t i = 0; i < 2; ++i) {
+                ctx.set_line_width(28);
+                ctx.set_stroke(0xff363685);
+                ctx.begin_path();
+                ctx.move_to(39.5, 18);
+                ctx.qcurve_to(0, 30, 0, 0);
+                ctx.stroke();
+                ctx.set_line_width(16.8);
+                ctx.set_stroke(0xff4343a4);
+                ctx.begin_path();
+                ctx.move_to(40, 18);
+                ctx.qcurve_to(0, 30, 0, 0);
+                ctx.stroke();
+                ctx.set_line_width(28);
+                ctx.set_stroke(0xff853636);
+                ctx.begin_path();
+                ctx.move_to(39.5, -18);
+                ctx.qcurve_to(0, -30, 0, 0);
+                ctx.stroke();
+                ctx.set_line_width(16.8);
+                ctx.set_stroke(0xffa44343);
+                ctx.begin_path();
+                ctx.move_to(40, -18);
+                ctx.qcurve_to(0, -30, 0, 0);
+                ctx.stroke();
+                ctx.butt_line_cap();
+            }
+            break;
         default:
             assert(id < PetalID::kNumPetals);
             assert(!"didn't cover petal render");

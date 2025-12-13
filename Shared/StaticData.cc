@@ -8,6 +8,7 @@ float const DEFAULT_FRICTION = 1.0f/3.0f;
 float const LIGHTNING_STRIKE_RADIUS = 300.0f;
 float const URANIUM_RADIATION_RADIUS = 1200.0f;
 float const DIGGER_SPAWN_CHANCE = 0.1f;
+float const MAX_PICKUP_RANGE = 250.0f;
 
 float const BASE_FLOWER_RADIUS = 25.0f;
 float const BASE_PETAL_ROTATION_SPEED = 2.5f;
@@ -914,6 +915,21 @@ std::array<struct PetalData, PetalID::kNumPetals> const PETAL_DATA = {{
         .rarity = RarityID::kRare,
         .attributes = {}
     },
+    {
+        .name = "Magnet",
+        .description = "Increases drop pickup range",
+        .health = 15.0,
+        .damage = 5.0,
+        .radius = 10.0,
+        .reload = 1.5,
+        .count = 1,
+        .rarity = RarityID::kMythic,
+        .attributes = {
+            .pickup_range = 250,
+            .defend_only = 1,
+            .icon_angle = -1
+        }
+    },
 }};
 
 std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
@@ -1288,7 +1304,7 @@ std::array<struct MobData, MobID::kNumMobs> const MOB_DATA = {{
         .radius = {25.0},
         .xp = 20,
         .drops = {
-            PetalID::kSalt, PetalID::kAntEgg, PetalID::kGoldenLeaf, PetalID::kOldLightning
+            PetalID::kSalt, PetalID::kAntEgg, PetalID::kOldLightning, PetalID::kMagnet
         },
         .attributes = {
             .stationary = 1,
