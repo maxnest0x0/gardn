@@ -10,7 +10,7 @@ void tick_entity_motion(Simulation *sim, Entity &ent) {
         --ent.slow_ticks;
     }
     if (ent.honey_ticks > 0) {
-        ent.speed_ratio *= 0.95;
+        ent.speed_ratio *= 0.8;
         --ent.honey_ticks;
     }
     ent.velocity *= (1 - ent.friction);
